@@ -1,0 +1,60 @@
+CSharpEWAH
+(c) Kemal Erdogan and Daniel Lemire,
+
+
+This is a word-aligned compressed variant of
+the Java Bitset class. It uses a 64-bit RLE-like
+compression scheme.
+
+The goal of word-aligned compression is not to 
+achieve the best compression, but rather to 
+improve query processing time. Hence, we try
+to save CPU cycles, maybe at the expense of
+storage. However, the EWAH scheme we implemented
+is always more efficient storage-wise than an
+uncompressed bitmap (as implemented in the java
+BitSet class by Sun).
+
+Among other possible open source licenses, this
+code is licensed under Apache License, Version 2.0 (ASL2.0).
+
+For more details, see the following paper:
+
+Daniel Lemire, Owen Kaser, Kamel Aouiche, Sorting improves word-aligned bitmap indexes.
+ Data & Knowledge Engineering 69 (1), pages 3-28, 2010.  
+ http://arxiv.org/abs/0901.3751
+ 
+
+
+Note: This is a port of JavaEWAH from Java
+to C# by Kemal Erdogan.
+
+== Unit testing ==
+
+ Building using Mono
+
+
+You can build CSharpEWAH using the open source
+Mono toolchain using the xbuild command.
+Just type xbuild in the main directory. This
+should build a C# executable file that you
+will then find in a newly created bin 
+directory.
+
+$ xbuild
+
+
+Then you can run the executable using
+the mono command:
+
+$ mono ./bin/Debug/EWAH.exe
+
+
+This will run unit tests.
+
+
+=== Usage ==
+
+See example.cs.
+
+ 
