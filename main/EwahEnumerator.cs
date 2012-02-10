@@ -1,7 +1,7 @@
 namespace Ewah
 {
     /*
-     * Copyright 2009-2012, Daniel Lemire
+     * Copyright 2012, Kemal Erdogan and Daniel Lemire
      * Licensed under APL 2.0.
      */
 

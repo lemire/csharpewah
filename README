@@ -1,10 +1,12 @@
 CSharpEWAH
-(c) Kemal Erdogan and Daniel Lemire,
-
+(c) 2012 Kemal Erdogan and Daniel Lemire,
+This code is licensed under the Apache
+License, Version 2.0 (ASL2.0)
 
 This is a word-aligned compressed variant of
 the Java Bitset class. It uses a 64-bit RLE-like
-compression scheme.
+compression scheme. It can be used to implement
+bitmap indexes.
 
 The goal of word-aligned compression is not to 
 achieve the best compression, but rather to 
@@ -15,16 +17,15 @@ is always more efficient storage-wise than an
 uncompressed bitmap (as implemented in the java
 BitSet class by Sun).
 
-Among other possible open source licenses, this
-code is licensed under Apache License, Version 2.0 (ASL2.0).
 
-For more details, see the following paper:
+For more details regarding the compressed format, see Section 3
+of the following paper:
 
 Daniel Lemire, Owen Kaser, Kamel Aouiche, Sorting improves word-aligned bitmap indexes.
  Data & Knowledge Engineering 69 (1), pages 3-28, 2010.  
  http://arxiv.org/abs/0901.3751
  
-
+(The PDF file is freely available on the arXiv site.)
 
 Note: This is a port of JavaEWAH from Java
 to C# by Kemal Erdogan.
