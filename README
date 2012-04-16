@@ -48,7 +48,7 @@ $ xbuild
 Then you can run the executable using
 the mono command:
 
-$ mono ./bin/Debug/EWAH.exe
+$ mono ./EWAH.RunTests/bin/Debug/EWAH.RunTests.exe
 
 
 This will run unit tests.
