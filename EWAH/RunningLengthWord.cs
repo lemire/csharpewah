@@ -1,3 +1,5 @@
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("EWAH.Tests")]
+
 namespace Ewah
 {
     /*
