@@ -83,7 +83,7 @@ namespace Ewah
         /** The Constant TEST_BS_SIZE: used to represent the size of a large bitmap. */
         private const int TestBsSize = 8*Mega;
 
-        /**
+  /**
    * Function used in a test inspired by Federico Fissore.
    *
    * @param size the number of set bits
@@ -127,12 +127,12 @@ namespace Ewah
             return answer;
         }
 
-        /**
+   /**
    * Pseudo-non-deterministic test inspired by S.J.vanSchaik.
    * (Yes, non-deterministic tests are bad, but the test is actually deterministic.)
    */
 
-        /**
+   /**
    * Pseudo-non-deterministic test inspired by Federico Fissore.
    *
    * @param length the number of set bits in a bitmap
@@ -154,11 +154,11 @@ namespace Ewah
             Assert.AreEqual(bitsToSet.Length, ewah.GetCardinality());
         }
 
-        /**
+   /**
    * Test running length word.
    */
 
-        /**
+   /**
    * Convenience function to assess equality between an array and an enumerator over
    * Integers
    *
@@ -186,7 +186,7 @@ namespace Ewah
             }
         }
 
-        /**
+   /**
    * Convenience function to assess equality between a compressed BitArray 
    * and an uncompressed BitArray
    *
@@ -209,7 +209,7 @@ namespace Ewah
         }
 
 
-        /**
+  /**
    * a non-deterministic test proposed by Marc Polizzi.
    *
    * @param maxlength the maximum uncompressed size of the bitmap
@@ -298,7 +298,7 @@ namespace Ewah
             }
         }
 
-        /**
+  /**
    * Assess equality between an uncompressed bitmap and a compressed one,
    *  part of a test contributed by Marc Polizzi.
    *
@@ -313,7 +313,7 @@ namespace Ewah
             assertCardinality(clrBitArray, ewahBitmap);
         }
 
-        /**
+  /**
    * Assess equality between an uncompressed bitmap and a compressed one,
    * part of a test contributed by Marc Polizzi
    *
@@ -328,7 +328,7 @@ namespace Ewah
         }
 
         // 
-        /**
+  /**
    * Assess equality between an uncompressed bitmap and a compressed one,
    * part of a test contributed by Marc Polizzi
    *
@@ -352,7 +352,7 @@ namespace Ewah
         }
 
         // part of a test contributed by Marc Polizzi
-        /**
+  /**
    * Assert equals positions.
    *
    * @param clrBitArray the jdk bitmap
@@ -379,7 +379,7 @@ namespace Ewah
             }
         }
 
-        /**
+  /**
    * Assert equals positions.
    *
    * @param ewahBitmap1 the ewah bitmap1
@@ -423,6 +423,19 @@ namespace Ewah
                 }
                 assertEqualsPositions(bitsToSet, ewah.GetPositions());
             }
+        }
+        
+        
+        [Test]
+        public void TestNot()
+        {
+           var bmp= new EwahCompressedBitArray();
+           for (int i = 0; i <= 184; i++) {
+               bmp.Set(i);
+           }
+           Assert.AreEqual(185, bmp.GetCardinality());
+           bmp.Not();
+           Assert.AreEqual(0, bmp.GetCardinality());
         }
 
         [Test]
@@ -572,7 +585,7 @@ namespace Ewah
             Assert.AreEqual(myarray1.SizeInBits, n);
         }
 
-        /**
+  /**
    * Test massive and.
    */
 
@@ -596,11 +609,11 @@ namespace Ewah
             Assert.IsTrue(answer.GetPositions().Count == 0);
         }
 
-        /**
+  /**
    * Test massive xor.
    */
 
-        /**
+  /**
    * Test massive and not.
    */
 
@@ -637,7 +650,7 @@ namespace Ewah
             }
         }
 
-        /**
+  /**
    * Test massive or.
    */
 
@@ -797,11 +810,11 @@ namespace Ewah
             AreEqual(val, result);
         }
 
-        /**
+  /**
    * Created: 2/4/11 6:03 PM By: Arnon Moscona.
    */
 
-        /**
+  /**
    * Test with parameters.
    *
    * @throws IOException Signals that an I/O exception has occurred.

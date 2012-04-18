@@ -23,6 +23,7 @@ public class example
         ewahBitmap1.Set(2);
         ewahBitmap1.Set(64);
         ewahBitmap1.Set(1 << 30);
+        Console.WriteLine("Running demo program:");
         Console.WriteLine("bitmap 1:");
         foreach (int k in ewahBitmap1)
             Console.WriteLine(k);
@@ -50,5 +51,6 @@ public class example
         foreach (int k in xorbitmap)
             Console.WriteLine(k);
         Console.WriteLine("memory usage: " + andbitmap.SizeInBytes + " bytes");
+        Console.WriteLine("End of demo.");
     }
 }
