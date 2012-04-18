@@ -486,7 +486,7 @@ namespace Ewah
         [Test]
         public void TestEwahCompressedBitArray()
         {
-            Console.WriteLine("testing EWAH");
+            Console.WriteLine("testing EWAH (basic)");
             const long zero = 0;
             const long specialval = 1L | (1L << 4) | (1L << 63);
             const long notzero = ~zero;

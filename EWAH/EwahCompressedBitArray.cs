@@ -606,27 +606,28 @@ namespace Ewah
         /// compressed size (as reported by <ref>SizeInBytes</ref>).
         /// </summary>
         /// <returns>the number of bits set to true</returns>
-        public int GetCardinality()
+        public ulong GetCardinality()
         {
-            int counter = 0;
+            ulong counter = 0;
             var i = new EwahEnumerator(_Buffer, _ActualSizeInWords);
             while (i.HasNext())
             {
                 RunningLengthWord localrlw = i.Next();
                 if (localrlw.RunningBit)
                 {
-                    counter += WordInBits*(int) localrlw.RunningLength;
+                    counter += (ulong)( WordInBits* localrlw.RunningLength ) ;
                 }
                 for (int j = 0; j < localrlw.NumberOfLiteralWords; ++j)
                 {
                     long data = i.Buffer[i.DirtyWords + j];
-                    for (int c = 0; c < WordInBits; ++c)
-                    {
-                        if ((data & (1L << c)) != 0)
-                        {
-                            ++counter;
-                        }
-                    }
+                    counter += bitCount((ulong)data);
+                    //for (int c = 0; c < WordInBits; ++c)
+                    //{
+                    //    if ((data & (1L << c)) != 0)
+                    //    {
+                    //        ++counter;
+                    //    }
+                    //}
                 }
             }
             return counter;
@@ -1530,6 +1531,23 @@ namespace Ewah
                 runningLengthWord = new BufferedRunningLengthWord(enumerator.Next());
             }
         }
+        
+        /// <summary>
+        /// Counts the number of set (1) bits.
+        /// </summary>
+        /// <param name="v">the value to be processed</param>        
+        public static UInt64 bitCount(UInt64 v)
+        { 
+			const UInt64 MaskMult = 0x0101010101010101;
+			const UInt64 mask1h = (~0UL) / 3 << 1;
+			const UInt64 mask2l = (~0UL) / 5;
+			const UInt64 mask4l = (~0UL) / 17;
+			v -= (mask1h & v) >> 1;
+			v = (v & mask2l) + ((v >> 2) & mask2l);
+			v += v >> 4;
+			v &= mask4l;
+			return (v * MaskMult) >> 56;
+		}
 
         /// <summary>
         /// For internal use.
