@@ -5,17 +5,6 @@ public class example
 {
     public static void Main(string[] args)
     {
-        var tr = new EwahCompressedBitArrayTest();
-        tr.TestCardinality();
-        tr.TestEwahCompressedBitArray();
-        tr.TestExternalization();
-        tr.TestLargeEwahCompressedBitArray();
-        tr.TestMassiveAnd();
-        tr.TestMassiveAndNot();
-        tr.TestMassiveOr();
-        tr.TestMassiveXOR();
-        tr.HabermaasTest();
-        tr.VanSchaikTest();
 
         var ewahBitmap1 = new EwahCompressedBitArray();
         var ewahBitmap2 = new EwahCompressedBitArray();
@@ -52,5 +41,19 @@ public class example
             Console.WriteLine(k);
         Console.WriteLine("memory usage: " + andbitmap.SizeInBytes + " bytes");
         Console.WriteLine("End of demo.");
+        Console.WriteLine("");
+        var tr = new EwahCompressedBitArrayTest();
+        tr.TestNot();
+        tr.TestCardinality();
+        tr.TestEwahCompressedBitArray();
+        tr.TestExternalization();
+        tr.TestLargeEwahCompressedBitArray();
+        tr.TestMassiveAnd();
+        tr.TestMassiveAndNot();
+        tr.TestMassiveOr();
+        tr.TestMassiveXOR();
+        tr.HabermaasTest();
+        tr.VanSchaikTest();
+
     }
 }

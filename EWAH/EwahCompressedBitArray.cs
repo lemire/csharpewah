@@ -833,7 +833,7 @@ namespace Ewah
                     {
                         return;
                     }
-                    i.Buffer[i.DirtyWords + rlw1.NumberOfLiteralWords - 1] &= ((~0L) >>
+                    i.Buffer[i.DirtyWords + rlw1.NumberOfLiteralWords - 1] &= (long) ((~0UL) >>
                                                                                (WordInBits - usedbitsinlast));
                     return;
                 }

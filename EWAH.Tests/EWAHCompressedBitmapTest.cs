@@ -429,6 +429,7 @@ namespace Ewah
         [Test]
         public void TestNot()
         {
+           Console.WriteLine("testing not");
            var bmp= new EwahCompressedBitArray();
            for (int i = 0; i <= 184; i++) {
                bmp.Set(i);
@@ -436,6 +437,7 @@ namespace Ewah
            Assert.AreEqual(185, bmp.GetCardinality());
            bmp.Not();
            Assert.AreEqual(0, bmp.GetCardinality());
+           Console.WriteLine("testing not:ok");
         }
 
         [Test]
@@ -471,6 +473,7 @@ namespace Ewah
             bitArraybbAnd.And(bitArrayab);
             AreEqual(bbAnd, bitArraybbAnd);
             AreEqual(bb, bitArraybb);
+            Console.WriteLine("testing habermaasTest:ok");
         }
 
         [Test]
@@ -481,6 +484,7 @@ namespace Ewah
             bitmap.Set(int.MaxValue);
             // Console.format("Total Items %d\n", bitmap.GetCardinality());
             Assert.AreEqual(bitmap.GetCardinality(), 1);
+            Console.WriteLine("testing EWAH GetCardinality:ok");
         }
 
         [Test]
@@ -548,6 +552,7 @@ namespace Ewah
                 x.Set(pos);
             }
             AreEqual(x.GetPositions(), myarray2.GetPositions());
+            Console.WriteLine("testing EWAH (basic):ok");
         }
 
         [Test]
@@ -570,6 +575,7 @@ namespace Ewah
 
             List<int> result = ewcb.GetPositions();
             AreEqual(val, result);
+            Console.WriteLine("testing EWAH externalization:ok");
         }
 
         [Test]
@@ -583,6 +589,7 @@ namespace Ewah
                 myarray1.Set(i);
             }
             Assert.AreEqual(myarray1.SizeInBits, n);
+            Console.WriteLine("testing EWAH over a large array:ok");
         }
 
   /**
@@ -607,6 +614,7 @@ namespace Ewah
             if (answer.GetPositions().Count != 0)
                 Console.WriteLine(answer.ToDebugString());
             Assert.IsTrue(answer.GetPositions().Count == 0);
+            Console.WriteLine("testing massive logical and:ok");
         }
 
   /**
@@ -648,6 +656,7 @@ namespace Ewah
                     Console.Error.WriteLine(e.StackTrace);
                 }
             }
+            Console.WriteLine("testing massive and not:ok");
         }
 
   /**
@@ -696,6 +705,7 @@ namespace Ewah
                     k += 1;
                 }
             }
+            Console.WriteLine("testing massive logical or:ok");
         }
 
         [Test]
@@ -730,6 +740,7 @@ namespace Ewah
                 Assert.AreEqual(k2, j);
                 k2 += 1;
             }
+            Console.WriteLine("testing massive xor:ok");
         }
 
         [Test]
@@ -794,6 +805,7 @@ namespace Ewah
                 Assert.AreEqual(true, rlw.RunningBit);
                 Assert.AreEqual(0, rlw.RunningLength);
             }
+            Console.WriteLine("testing RunningLengthWord:ok");
         }
 
         [Test]
@@ -808,6 +820,7 @@ namespace Ewah
             }
             List<int> result = ewcb.GetPositions();
             AreEqual(val, result);
+            Console.WriteLine("testing EWAH Set/get:ok");
         }
 
   /**
@@ -854,7 +867,8 @@ namespace Ewah
                     }
                 }
                 Assert.AreEqual(cBitMap.GetCardinality(), numBitsSet);
-            }
+            }         
+            Console.WriteLine("testing vanSchaikTest:ok");
         }
     }
 }
