@@ -1,0 +1,4 @@
+0.1.0 (April 19th 2012)
+  New file layout.
+  Fixed a bug in how the cardinality is computed.
+  Made the computation of the cardinality faster.
