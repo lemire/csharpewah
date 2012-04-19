@@ -1510,6 +1510,7 @@ namespace Ewah
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            this.Shrink();
             info.AddValue("sb", SizeInBits);
             info.AddValue("aw", _ActualSizeInWords);
             info.AddValue("bu", _Buffer, typeof (long[]));
