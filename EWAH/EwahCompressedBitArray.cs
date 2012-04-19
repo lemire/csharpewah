@@ -1071,6 +1071,22 @@ namespace Ewah
         }
 
         /// <summary>
+        /// Sets the internal buffer to the minimum possible size required to contain
+        /// the current bitarray.
+        ///
+        /// This method is useful when dealing with static bitmasks, if it is called
+        /// after the final bit has been set, some memory can be free-ed.
+        ///
+        /// Please note, the next bit set after a call to shrink will cause the memory
+        /// usage of the bit-array to double.
+        /// </summary>
+        public void Shrink()
+        {
+            Array.Resize(ref _Buffer, _ActualSizeInWords);
+            _Rlw.ArrayOfWords = _Buffer;
+        }
+
+        /// <summary>
         /// A more detailed string describing the bitmap (useful for debugging).
         /// </summary>
         /// <returns>detailed debug string</returns>
