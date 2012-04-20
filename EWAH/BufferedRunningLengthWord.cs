@@ -1,9 +1,10 @@
 namespace Ewah
 {
 /*
- * Copyright 2012, Kemal Erdogan and Daniel Lemire
+ * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
  * Licensed under APL 2.0.
  */
+
 
     /// <summary>
     /// Mostly for internal use. Similar to RunningLengthWord, but can

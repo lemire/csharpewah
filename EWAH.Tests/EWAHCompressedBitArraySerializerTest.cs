@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -7,6 +7,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Ewah
 {
+	
+/*
+ * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
+ * Licensed under APL 2.0.
+ */
     [TestFixture]
     public class EWAHCompressedBitArraySerializerTest
     {

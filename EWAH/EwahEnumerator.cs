@@ -1,9 +1,10 @@
 namespace Ewah
 {
-    /*
-     * Copyright 2012, Kemal Erdogan and Daniel Lemire
-     * Licensed under APL 2.0.
-     */
+/*
+ * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
+ * Licensed under APL 2.0.
+ */
+
 
     /// <summary>
     /// The class EwahEnumerator represents a special type of

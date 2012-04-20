@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +6,11 @@ using System.IO;
 
 namespace Ewah
 {
-    /*
-     * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
-     * Licensed under APL 2.0.
-     */
+/*
+ * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
+ * Licensed under APL 2.0.
+ */
+
     /// <summary>
     /// A very simple Serialization schema for serialising and de-serialising instance of <see cref="Ewah.EwahCompressedBitArray"/>. 
     /// 

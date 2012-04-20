@@ -1,6 +1,11 @@
 using System;
 using Ewah;
 
+/*
+ * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
+ * Licensed under APL 2.0.
+ */
+
 public class example
 {
     public static void Main(string[] args)

@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Ewah
 {
 /*
- * Copyright 2012, Kemal Erdogan and Daniel Lemire
+ * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
  * Licensed under APL 2.0.
  */
     public static class Ext

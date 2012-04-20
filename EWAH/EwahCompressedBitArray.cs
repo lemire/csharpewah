@@ -6,10 +6,11 @@ using System.Text;
 
 namespace Ewah
 {
-    /*
-     * Copyright 2012, Kemal Erdogan and Daniel Lemire
-     * Licensed under APL 2.0.
-     */
+/*
+ * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
+ * Licensed under APL 2.0.
+ */
+
 
     /// <summary>
     /// <p>This implements the patent-free(1) EWAH scheme. Roughly speaking, it is a
