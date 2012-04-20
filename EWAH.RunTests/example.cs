@@ -55,5 +55,7 @@ public class example
         tr.HabermaasTest();
         tr.VanSchaikTest();
 
+        new EWAHCompressedBitArraySerializerTest().TestCustomSerializationStrategy();
+
     }
 }
