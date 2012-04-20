@@ -71,18 +71,18 @@ namespace Ewah
         /// <summary>
         /// current (last) running length word
         /// </summary>
-        private readonly RunningLengthWord _Rlw;
+        internal readonly RunningLengthWord _Rlw;
 
         #endregion
 
         #region Fields
 
-        private int _ActualSizeInWords = 1;
+        internal int _ActualSizeInWords = 1;
 
         /// <summary>
         /// The buffer (array of 64-bit words)
         /// </summary>
-        private long[] _Buffer;
+        internal long[] _Buffer;
 
         #endregion
 
@@ -115,11 +115,20 @@ namespace Ewah
         /// <param name="input"></param>
         /// <param name="context"></param>
         private EwahCompressedBitArray(SerializationInfo input, StreamingContext context)
-        {
-            SizeInBits = input.GetInt32("sb");
-            _ActualSizeInWords = input.GetInt32("aw");
-            _Buffer = (long[]) input.GetValue("bu", typeof (long[]));
-            _Rlw = new RunningLengthWord(_Buffer, input.GetInt32("rp"));
+            : this(input.GetInt32("sb"), input.GetInt32("aw"), (long[])input.GetValue("bu", typeof(long[])), input.GetInt32("rp"))  { }
+
+        /// <summary>
+        /// Special constructor used by serialization infrastructure
+        /// </summary>
+        /// <param name="sizeInBits">The size in bits.</param>
+        /// <param name="actualSizeInWords">The actual size in words.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="runningLengthWordPosition">The running length word position.</param>
+        internal EwahCompressedBitArray(int sizeInBits, int actualSizeInWords, long[] buffer, int runningLengthWordPosition) {
+            this.SizeInBits = sizeInBits;
+            this._ActualSizeInWords = actualSizeInWords;
+            this._Buffer = buffer;
+            this._Rlw = new RunningLengthWord(_Buffer, runningLengthWordPosition);
         }
 
         #endregion
@@ -1071,6 +1080,22 @@ namespace Ewah
         }
 
         /// <summary>
+        /// Sets the internal buffer to the minimum possible size required to contain
+        /// the current bitarray.
+        ///
+        /// This method is useful when dealing with static bitmasks, if it is called
+        /// after the final bit has been set, some memory can be free-ed.
+        ///
+        /// Please note, the next bit set after a call to shrink will cause the memory
+        /// usage of the bit-array to double.
+        /// </summary>
+        public void Shrink()
+        {
+            Array.Resize(ref _Buffer, _ActualSizeInWords);
+            _Rlw.ArrayOfWords = _Buffer;
+        }
+
+        /// <summary>
         /// A more detailed string describing the bitmap (useful for debugging).
         /// </summary>
         /// <returns>detailed debug string</returns>
@@ -1494,6 +1519,7 @@ namespace Ewah
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            this.Shrink();
             info.AddValue("sb", SizeInBits);
             info.AddValue("aw", _ActualSizeInWords);
             info.AddValue("bu", _Buffer, typeof (long[]));

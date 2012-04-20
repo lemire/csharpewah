@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="BufferedRunningLengthWord.cs" />
     <Compile Include="EwahCompressedBitArray.cs" />
+    <Compile Include="EwahCompressedBitArraySerializer.cs" />
     <Compile Include="EwahEnumerator.cs" />
     <Compile Include="PlaceHolders.cs" />
     <Compile Include="RunningLengthWord.cs" />
