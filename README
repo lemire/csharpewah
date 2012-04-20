@@ -3,8 +3,8 @@ CSharpEWAH
 This code is licensed under the Apache
 License, Version 2.0 (ASL2.0)
 
-This is a word-aligned compressed variant of
-the Java Bitset class. It uses a 64-bit RLE-like
+This is a compressed variant of
+the standard bitarray class. It uses a 64-bit RLE-like
 compression scheme. It can be used to implement
 bitmap indexes.
 
@@ -14,8 +14,8 @@ improve query processing time. Hence, we try
 to save CPU cycles, maybe at the expense of
 storage. However, the EWAH scheme we implemented
 is always more efficient storage-wise than an
-uncompressed bitmap (as implemented in the java
-BitSet class by Sun).
+uncompressed bitarray. 
+
 
 
 For more details regarding the compressed format, see Section 3
@@ -27,8 +27,6 @@ Daniel Lemire, Owen Kaser, Kamel Aouiche, Sorting improves word-aligned bitmap i
  
 (The PDF file is freely available on the arXiv site.)
 
-Note: This is a port of JavaEWAH from Java
-to C# by Kemal Erdogan.
 
 == Unit testing ==
 
