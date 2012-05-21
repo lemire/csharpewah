@@ -675,14 +675,20 @@ namespace Ewah
                 for (int j = 0; j < localrlw.NumberOfLiteralWords; ++j)
                 {
                     long data = i.Buffer[i.DirtyWords + j];
-                    for (int c = 0; c < WordInBits; ++c)
-                    {
-                        if (((1L << c) & data) != 0)
-                        {
-                            v.Add(pos);
-                        }
-                        ++pos;
+                    //for (int c = 0; c < WordInBits; ++c)
+                    //{
+                    //    if (((1L << c) & data) != 0)
+                    //    {
+                    //        v.Add(pos);
+                    //    }
+                    //    ++pos;
+                    //}
+                    while(data!=0) {
+                    	int ntz = (int) numberOfTrailingZeros((UInt64)data);
+                        data ^= (1L << ntz);
+                        Add(pos + ntz);
                     }
+                    pos += WordInBits;
                 }
             }
             while ((v.Count > 0)
