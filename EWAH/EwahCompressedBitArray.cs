@@ -1559,11 +1559,40 @@ namespace Ewah
             }
         }
         
+        
+        /// <summary>
+        /// Compute the number of trailing zeros in binary format.
+        /// </summary>
+        /// <param name="v">the value to be processed</param>   
+        public static UInt32 numberOfTrailingZeros(UInt32 v) 
+        {
+        	UInt32 c = 32; // c will be the number of zero bits on the right
+            v &= (UInt32) (- (Int32)v);
+            if (v!=0) c--;
+            if ((v & 0x0000FFFF) !=0) c -= 16;
+            if ((v & 0x00FF00FF) !=0) c -= 8;
+            if ((v & 0x0F0F0F0F) !=0) c -= 4;
+            if ((v & 0x33333333) !=0) c -= 2;
+            if ((v & 0x55555555) !=0) c -= 1;
+            return c;
+        }
+
+        /// <summary>
+        /// Compute the number of trailing zeros in binary format.
+        /// </summary>
+        /// <param name="v">the value to be processed</param>   
+        public static UInt32 numberOfTrailingZeros(UInt64 x) 
+        {
+        	UInt32 part1 = (UInt32) x;
+        	if(part1!=0) return numberOfTrailingZeros(part1);
+        	return 32+ numberOfTrailingZeros((UInt32)(x>>32));
+        }
+        
         /// <summary>
         /// Counts the number of set (1) bits.
         /// </summary>
         /// <param name="v">the value to be processed</param>        
-        public static UInt64 bitCount(UInt64 v)
+        public static UInt32 bitCount(UInt64 v)
         { 
 			const UInt64 MaskMult = 0x0101010101010101;
 			const UInt64 mask1h = (~0UL) / 3 << 1;
@@ -1573,7 +1602,7 @@ namespace Ewah
 			v = (v & mask2l) + ((v >> 2) & mask2l);
 			v += v >> 4;
 			v &= mask4l;
-			return (v * MaskMult) >> 56;
+			return (UInt32) ((v * MaskMult) >> 56);
 		}
 
         /// <summary>
@@ -1686,14 +1715,20 @@ namespace Ewah
                 for (int j = 0; j < _LocalRlw.NumberOfLiteralWords; ++j)
                 {
                     long data = _EwahEnumerator.Buffer[_EwahEnumerator.DirtyWords + j];
-                    for (int c = 0; c < _WordInBits; ++c)
-                    {
-                        if (((1L << c) & data) != 0)
-                        {
-                            Add(_Pos);
-                        }
-                        ++_Pos;
+                    //for (int c = 0; c < _WordInBits; ++c)
+                    //{
+                    //    if (((1L << c) & data) != 0)
+                    //    {
+                    //        Add(_Pos);
+                    //    }
+                    //    ++_Pos;
+                    //}
+                    while(data!=0) {
+                    	int ntz = (int) numberOfTrailingZeros((UInt64)data);
+                        data ^= (1L << ntz);
+                        Add(_Pos + ntz);
                     }
+                    _Pos += _WordInBits;
                 }
             }
 
