@@ -809,6 +809,15 @@ namespace Ewah
         }
         
         [Test]
+   public void testHasNextSafe() {
+      EwahCompressedBitArray bitmap = new EwahCompressedBitArray();
+      bitmap.Set(0);
+      IEnumerator<int> it = ((IEnumerable<int>)bitmap).GetEnumerator();
+      Assert.AreEqual(it.MoveNext(),true);
+      Assert.AreEqual(0, it.Current);
+  }
+        
+        [Test]
 		public void TestCloneEwahCompressedBitArray()
 		{
 		    Console.WriteLine("testing EWAH clone");

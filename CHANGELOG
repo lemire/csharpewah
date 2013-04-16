@@ -1,4 +1,7 @@
 
+0.2.1 (upcoming)
+  Clone method does not clone the _Rlw variable
+
 0.2.0 (April 20th 2012)
   New lightweight serialization infrastructure (Ciaran Jessup).
 

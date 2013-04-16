@@ -67,17 +67,17 @@ namespace Ewah
 
         #endregion
 
-        //#region Readonly & Static Fields
+        #region Readonly & Static Fields
 
-        /// <summary>
-        /// current (last) running length word
-        /// </summary>
         //internal readonly RunningLengthWord _Rlw;
 
-        //#endregion
+        #endregion
 
         #region Fields
         
+        /// <summary>
+        /// current (last) running length word
+        /// </summary>
         internal RunningLengthWord _Rlw;
 
         internal int _ActualSizeInWords = 1;
