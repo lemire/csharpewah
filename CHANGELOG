@@ -1,6 +1,10 @@
 
 0.2.1 (upcoming)
   Clone method does not clone the _Rlw variable
+  Fixed bug in function Not when SizeInBits is not a multiple of 64
+  added method "bitmapOf"
+  made method ToString return something friendlier
+  
 
 0.2.0 (April 20th 2012)
   New lightweight serialization infrastructure (Ciaran Jessup).

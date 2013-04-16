@@ -208,27 +208,21 @@ namespace Ewah
         /// <returns>the description string</returns>
         public override string ToString()
         {
-            var ans = new StringBuilder(" EwahCompressedBitArray, size in bits = ");
-            ans.Append(SizeInBits);
-            ans.Append(" size in words = ");
-            ans.AppendLine(_ActualSizeInWords.ToString());
-            var i = new EwahEnumerator(_Buffer, _ActualSizeInWords);
-            while (i.HasNext())
-            {
-                RunningLengthWord localrlw = i.Next();
-                if (localrlw.RunningBit)
-                {
-                    ans.Append(localrlw.RunningLength);
-                    ans.AppendLine(" 1x11");
-                }
-                else
-                {
-                    ans.Append(localrlw.RunningLength);
-                    ans.AppendLine(" 0x00");
-                }
-                ans.Append(localrlw.NumberOfLiteralWords);
-                ans.AppendLine(" dirties\n");
-            }
+            var ans = new StringBuilder("{");
+            
+            
+		    IEnumerator<int> it = ((IEnumerable<int>)this).GetEnumerator();
+		    
+		    if(it.MoveNext()) 
+		     while(true) {
+		    	ans.Append(it.Current);
+		    	var b = it.MoveNext();
+		    	if(b) 
+		    	  ans.Append(",");
+		    	else
+		    	  break;
+		     }
+		    ans.Append("}");
             return ans.ToString();
         }
 
@@ -1128,6 +1122,9 @@ namespace Ewah
             }
             return ans;
         }
+          
+
+        
 
         /// <summary>
         /// Returns a new compressed bitmap containing the bitwise XOR values of the
@@ -1491,7 +1488,8 @@ namespace Ewah
         public object Clone()
         {
             var clone = new EwahCompressedBitArray();
-            clone._Rlw = (RunningLengthWord) _Rlw.Clone();            clone._Buffer = (long[]) _Buffer.Clone();
+            clone._Buffer = (long[]) _Buffer.Clone();
+            clone._Rlw =  new RunningLengthWord(clone._Buffer,_Rlw.Position);
             clone._ActualSizeInWords = _ActualSizeInWords;
             clone.SizeInBits = SizeInBits;
             return clone;
@@ -1533,7 +1531,13 @@ namespace Ewah
         #endregion
 
         #region Class Methods
-
+        
+		public static EwahCompressedBitArray BitmapOf(params int[] setbits) {
+    		EwahCompressedBitArray a = new EwahCompressedBitArray();
+    		foreach (int k in setbits)
+      			a.Set(k);
+    		return a;
+  		}
         /// <summary>
         /// For internal use.
         /// </summary>
