@@ -835,7 +835,7 @@ namespace Ewah
 		      bitmap.SetSizeInBits(1, false);
 		      Assert.AreEqual(1, bitmap.SizeInBits);
 		      bitmap.Not();
-//		      Assert.AreEqual(1, bitmap.GetCardinality());
+		      Assert.AreEqual(1, bitmap.GetCardinality());
 		  }
 		
 		  [Test]

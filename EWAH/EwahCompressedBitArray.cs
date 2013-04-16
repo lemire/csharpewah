@@ -620,11 +620,14 @@ namespace Ewah
         /// <returns>the number of bits set to true</returns>
         public ulong GetCardinality()
         {
+
             ulong counter = 0;
             var i = new EwahEnumerator(_Buffer, _ActualSizeInWords);
             while (i.HasNext())
             {
+
                 RunningLengthWord localrlw = i.Next();
+
                 if (localrlw.RunningBit)
                 {
                     counter += (ulong)( WordInBits* localrlw.RunningLength ) ;
@@ -633,13 +636,6 @@ namespace Ewah
                 {
                     long data = i.Buffer[i.DirtyWords + j];
                     counter += bitCount((ulong)data);
-                    //for (int c = 0; c < WordInBits; ++c)
-                    //{
-                    //    if ((data & (1L << c)) != 0)
-                    //    {
-                    //        ++counter;
-                    //    }
-                    //}
                 }
             }
             return counter;
@@ -820,6 +816,7 @@ namespace Ewah
         /// </summary>
         public void Not()
         {
+
             var i = new EwahEnumerator(_Buffer, _ActualSizeInWords);
             if (!i.HasNext())
             {
@@ -827,7 +824,9 @@ namespace Ewah
             }
             while (true)
             {
+
                 RunningLengthWord rlw1 = i.Next();
+
                 rlw1.RunningBit = !rlw1.RunningBit;
                 for (int j = 0; j < rlw1.NumberOfLiteralWords; ++j)
                 {
@@ -835,9 +834,9 @@ namespace Ewah
                 }
                 if (!i.HasNext())
                 {
-       
+
           			int usedbitsinlast = SizeInBits % 64;
-          			if (usedbitsinlast == 0)
+          		          			if (usedbitsinlast == 0)
             			return;
 
     				if (rlw1.NumberOfLiteralWords == 0) 
@@ -847,9 +846,11 @@ namespace Ewah
     						rlw1.RunningLength = rlw1.RunningLength-1;
     						AddLiteralWord((long)((~0UL) >> (64 - usedbitsinlast)));
     					}
+    					return;
     				}
                     i.Buffer[i.DirtyWords + rlw1.NumberOfLiteralWords - 1] &= (long) ((~0UL) >>
-                                                                               (WordInBits - usedbitsinlast));
+                                                                               (64 - usedbitsinlast));
+                                                                               
                     return;
                 }
                 

@@ -47,7 +47,7 @@ public class example
         Console.WriteLine("memory usage: " + andbitmap.SizeInBytes + " bytes");
         Console.WriteLine("End of demo.");
         Console.WriteLine("");
-        var tr = new EwahCompressedBitArrayTest();
+        var tr = new EwahCompressedBitArrayTest();/*
         tr.EwahIteratorProblem();
         tr.TayaraTest();
         tr.TestNot();
@@ -61,10 +61,10 @@ public class example
         tr.TestMassiveXOR();
         tr.HabermaasTest();
         tr.VanSchaikTest();
-        tr.TestRunningLengthWord();
+        tr.TestRunningLengthWord();*/
         tr.TestSizeInBits1();
         tr.TestHasNextSafe();
-        //tr.TestCloneEwahCompressedBitArray();
+        tr.TestCloneEwahCompressedBitArray();
         tr.TestSetGet();
         tr.TestWithParameters();
 
