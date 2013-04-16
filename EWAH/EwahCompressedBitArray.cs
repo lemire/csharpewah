@@ -835,20 +835,24 @@ namespace Ewah
                 }
                 if (!i.HasNext())
                 {
-                    // must potentially adjust the last dirty word
-                    if (rlw1.NumberOfLiteralWords == 0)
-                    {
-                        return;
-                    }
-                    int usedbitsinlast = SizeInBits%WordInBits;
-                    if (usedbitsinlast == 0)
-                    {
-                        return;
-                    }
+       
+          			int usedbitsinlast = SizeInBits % 64;
+          			if (usedbitsinlast == 0)
+            			return;
+
+    				if (rlw1.NumberOfLiteralWords == 0) 
+    				{
+    					if((rlw1.RunningLength>0) && (rlw1.RunningBit)) 
+    					{
+    						rlw1.RunningLength = rlw1.RunningLength-1;
+    						AddLiteralWord((long)((~0UL) >> (64 - usedbitsinlast)));
+    					}
+    				}
                     i.Buffer[i.DirtyWords + rlw1.NumberOfLiteralWords - 1] &= (long) ((~0UL) >>
                                                                                (WordInBits - usedbitsinlast));
                     return;
                 }
+                
             }
         }
 
