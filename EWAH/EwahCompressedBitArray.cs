@@ -67,16 +67,18 @@ namespace Ewah
 
         #endregion
 
-        #region Readonly & Static Fields
+        //#region Readonly & Static Fields
 
         /// <summary>
         /// current (last) running length word
         /// </summary>
-        internal readonly RunningLengthWord _Rlw;
+        //internal readonly RunningLengthWord _Rlw;
 
-        #endregion
+        //#endregion
 
         #region Fields
+        
+        internal RunningLengthWord _Rlw;
 
         internal int _ActualSizeInWords = 1;
 
@@ -1488,7 +1490,7 @@ namespace Ewah
         public object Clone()
         {
             var clone = new EwahCompressedBitArray();
-            clone._Buffer = (long[]) _Buffer.Clone();
+            clone._Rlw = (RunningLengthWord) _Rlw.Clone();            clone._Buffer = (long[]) _Buffer.Clone();
             clone._ActualSizeInWords = _ActualSizeInWords;
             clone.SizeInBits = SizeInBits;
             return clone;

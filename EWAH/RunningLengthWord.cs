@@ -129,6 +129,15 @@ namespace Ewah
 
         #endregion
 
+        #region ICloneable Members
+
+        public object Clone()
+        {
+            var clone = new RunningLengthWord(ArrayOfWords,Position);
+            return clone;
+        }
+
+        #endregion
         #region Instance Methods
 
         public override string ToString()

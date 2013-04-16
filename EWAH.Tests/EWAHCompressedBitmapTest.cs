@@ -807,6 +807,26 @@ namespace Ewah
             }
             Console.WriteLine("testing RunningLengthWord:ok");
         }
+        
+        [Test]
+		public void TestCloneEwahCompressedBitArray()
+		{
+		    Console.WriteLine("testing EWAH clone");
+		    EwahCompressedBitArray a = new EwahCompressedBitArray();
+		    a.Set(410018);
+		    a.Set(410019);
+		    a.Set(410020);
+		    a.Set(410021);
+		    a.Set(410022);
+		    a.Set(410023);
+		
+		    EwahCompressedBitArray b = (EwahCompressedBitArray)a.Clone();
+		
+		    a.SetSizeInBits(487123, false);
+		    b.SetSizeInBits(487123, false);
+		
+		    Assert.AreEqual(a, b);
+		}
 
         [Test]
         public void TestSetGet()
