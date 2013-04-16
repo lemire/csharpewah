@@ -808,14 +808,22 @@ namespace Ewah
             Console.WriteLine("testing RunningLengthWord:ok");
         }
         
-        [Test]
-   public void testHasNextSafe() {
-      EwahCompressedBitArray bitmap = new EwahCompressedBitArray();
-      bitmap.Set(0);
-      IEnumerator<int> it = ((IEnumerable<int>)bitmap).GetEnumerator();
-      Assert.AreEqual(it.MoveNext(),true);
-      Assert.AreEqual(0, it.Current);
-  }
+		  [Test]
+		  public void TestSizeInBits1() {
+		      EwahCompressedBitArray bitmap = new EwahCompressedBitArray();
+		      bitmap.SetSizeInBits(1, false);
+		      bitmap.Not();
+		      Assert.AreEqual(1, bitmap.GetCardinality());
+		  }
+		
+		  [Test]
+		   public void TestHasNextSafe() {
+		      EwahCompressedBitArray bitmap = new EwahCompressedBitArray();
+		      bitmap.Set(0);
+		      IEnumerator<int> it = ((IEnumerable<int>)bitmap).GetEnumerator();
+		      Assert.AreEqual(it.MoveNext(),true);
+		      Assert.AreEqual(0, it.Current);
+		  }
         
         [Test]
 		public void TestCloneEwahCompressedBitArray()
