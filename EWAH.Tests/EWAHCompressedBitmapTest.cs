@@ -828,6 +828,31 @@ namespace Ewah
             Console.WriteLine("testing RunningLengthWord:ok");
         }
         
+  [Test]
+  public void testsetSizeInBits() {
+	  Console.WriteLine("testing setSizeInBits");
+	  for(int k = 0; k < 4096; ++k) {
+		  EwahCompressedBitArray ewah = new EwahCompressedBitArray();
+		  ewah.SizeInBits = k;
+		  Assert.AreEqual(ewah.SizeInBits,k);
+		  Assert.AreEqual(ewah.GetCardinality(),0);
+		  EwahCompressedBitArray ewah2 = new EwahCompressedBitArray();
+		  ewah2.SetSizeInBits(k, false);
+		  Assert.AreEqual(ewah2.SizeInBits,k);
+		  Assert.AreEqual(ewah2.GetCardinality(),0);
+		  EwahCompressedBitArray ewah3 = new EwahCompressedBitArray();
+		  for(int i = 0; i < k ; ++i) {
+			  ewah3.Set(i);
+		  }
+		  Assert.AreEqual(ewah3.SizeInBits,k);
+		  Assert.AreEqual(ewah3.GetCardinality(),k);
+		  EwahCompressedBitArray ewah4 = new EwahCompressedBitArray();
+		  ewah4.SetSizeInBits(k, true);
+		  Assert.AreEqual(ewah4.SizeInBits,k);
+		  Assert.AreEqual(ewah4.GetCardinality(),k);
+	  }
+  }
+
 		  [Test]
 		  public void TestSizeInBits1() {
 		  	  Console.WriteLine("testing TestSizeInBits1");
@@ -888,7 +913,24 @@ namespace Ewah
 		       }
 		    }
 		    EwahCompressedBitArray and2 = a.And(b);      
-		    Assert.AreEqual(true,and2.Equals(inter));
+		    List<int> l1 = inter.GetPositions();
+		    List<int> l2 = and2.GetPositions();
+		    var ok = true;
+		    if(l1.Count != l2.Count) { 
+		        Console.WriteLine("cardinality differs = "+l1.Count+" "+l2.Count);
+		        ok = false;
+		    }
+		    for(int k = 0; k< l1.Count; ++k) {
+		    	if(l1[k] != l2[k]) {
+		    			    Console.WriteLine("differ at "+k+" = "+l1[k]+" "+l2[k]);
+		    			    ok = false;
+		    	}
+
+		    }
+		    Console.WriteLine(and2.Equals(inter));   
+		    
+		    
+            Assert.AreEqual(true,and2.Equals(inter));
 		    Assert.AreEqual(intersection ,and2.GetCardinality());
 		  } 
 		  

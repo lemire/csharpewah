@@ -143,7 +143,7 @@ namespace Ewah
         /// compressed bitmap. Initially, the SizeInBits is zero. It is extended
         /// automatically when you set bits to true.
         /// </summary>
-        public int SizeInBits { get; private set; }
+        public int SizeInBits { get;  set; }
 
         /// <summary>
         /// Report the *compressed* size of the bitmap (equivalent to memory usage,
@@ -160,6 +160,7 @@ namespace Ewah
 
         /// <summary>
         /// Check to see whether the two compressed bitmaps contain the same data
+        /// (effectively check whether the cardinality of a XOR is == 0.
         /// </summary>
         /// <param name="o">the other bitmap</param>
         /// <returns></returns>
@@ -168,19 +169,7 @@ namespace Ewah
             var other = o as EwahCompressedBitArray;
             if (other != null)
             {
-                if (SizeInBits == other.SizeInBits
-                    && _ActualSizeInWords == other._ActualSizeInWords
-                    && _Rlw.Position == other._Rlw.Position)
-                {
-                    for (int k = 0; k < _ActualSizeInWords; ++k)
-                    {
-                        if (_Buffer[k] != other._Buffer[k])
-                        {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
+                return this.Xor(other).GetCardinality() == 0; // could be more efficient
             }
             return false;
         }
@@ -829,7 +818,7 @@ namespace Ewah
                 if (!i.HasNext())
                 {
 
-          			int usedbitsinlast = SizeInBits % 64;
+          			int usedbitsinlast = SizeInBits % WordInBits;
           		          			if (usedbitsinlast == 0)
             			return;
 
@@ -838,12 +827,12 @@ namespace Ewah
     					if((rlw1.RunningLength>0) && (rlw1.RunningBit)) 
     					{
     						rlw1.RunningLength = rlw1.RunningLength-1;
-    						AddLiteralWord((long)((~0UL) >> (64 - usedbitsinlast)));
+    						AddLiteralWord((long)((~0UL) >> (WordInBits - usedbitsinlast)));
     					}
     					return;
     				}
                     i.Buffer[i.DirtyWords + rlw1.NumberOfLiteralWords - 1] &= (long) ((~0UL) >>
-                                                                               (64 - usedbitsinlast));
+                                                                               (WordInBits - usedbitsinlast));
                                                                                
                     return;
                 }
@@ -1003,19 +992,19 @@ namespace Ewah
                 return false;
             }
             // must I complete a word?
-            if ((SizeInBits%64) != 0)
+            if ((SizeInBits%WordInBits) != 0)
             {
-                int possiblesizeinbits = (SizeInBits/64)*64 + 64;
+                int possiblesizeinbits = (SizeInBits/WordInBits)*WordInBits + WordInBits;
                 if (possiblesizeinbits < i + 1)
                 {
                     SizeInBits = possiblesizeinbits;
                 }
             }
-            AddStreamOfEmptyWords(false, (i/64) - SizeInBits/64);
-            int bittoflip = i - (SizeInBits/64*64);
+            AddStreamOfEmptyWords(false, (i/WordInBits) - SizeInBits/WordInBits);
+            int bittoflip = i - (SizeInBits/WordInBits*WordInBits);
             // next, we set the bit
             if ((_Rlw.NumberOfLiteralWords == 0)
-                || ((SizeInBits - 1)/64 < i/64))
+                || ((SizeInBits - 1)/WordInBits < i/WordInBits))
             {
                 long newdata = 1L << bittoflip;
                 AddLiteralWord(newdata);
@@ -1056,19 +1045,19 @@ namespace Ewah
             }
             if( defaultvalue == false ) {
 
-			    int currentLeftover = SizeInBits % 64;
-			    int finalLeftover = size % 64;
-			    AddStreamOfEmptyWords(false, (size / 64) - SizeInBits
-			      / 64 + (finalLeftover != 0 ? 1 : 0)
+			    int currentLeftover = SizeInBits % WordInBits;
+			    int finalLeftover = size % WordInBits;
+			    AddStreamOfEmptyWords(false, (size / WordInBits) - SizeInBits
+			      / WordInBits + (finalLeftover != 0 ? 1 : 0)
 			      + (currentLeftover != 0 ? -1 : 0));
       
             } else {
 		      // next bit could be optimized
-		      while (((SizeInBits % 64) != 0) && (SizeInBits < size)) {
+		      while (((SizeInBits % WordInBits) != 0) && (SizeInBits < size)) {
 		        	Set(SizeInBits);
 		      }
-		      AddStreamOfEmptyWords(defaultvalue, (size / 64)
-		        - SizeInBits / 64);
+		      AddStreamOfEmptyWords(defaultvalue, (size / WordInBits)
+		        - SizeInBits / WordInBits);
 		      // next bit could be optimized
 		      while (SizeInBits < size) {
 		        	Set(SizeInBits);

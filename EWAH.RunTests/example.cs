@@ -30,6 +30,7 @@ public class example
         Console.WriteLine("End of demo.");
         Console.WriteLine("");
         var tr = new EwahCompressedBitArrayTest();
+        tr.testsetSizeInBits();
         tr.SsiYanKaiTest();
         tr.testDebugSetSizeInBitsTest();
         tr.EwahIteratorProblem();

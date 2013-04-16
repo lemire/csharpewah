@@ -1,9 +1,11 @@
 
-0.2.1 (upcoming)
+0.2.1 (April 16th 2013)
   Clone method does not clone the _Rlw variable
   Fixed bug in function Not when SizeInBits is not a multiple of 64
   added method "bitmapOf"
   made method ToString return something friendlier
+  change the semantics of "equals" so that a Xor is computed (small perf penalty, but nicer in practice)
+  added many unit tests
   
 
 0.2.0 (April 20th 2012)
