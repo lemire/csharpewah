@@ -1055,33 +1055,29 @@ namespace Ewah
             {
                 return false;
             }
-            // next loop could be optimized further
-            if (defaultvalue)
-            {
-                while (((SizeInBits%64) != 0) && (SizeInBits < size))
-                {
-                    Set(SizeInBits);
-                }
-            }
-            int leftover = size%64;
-            if (defaultvalue == false)
-            {
-                AddStreamOfEmptyWords(false,
-                                      (size/64) - SizeInBits
-                                                  /64 + (leftover != 0 ? 1 : 0));
-            }
-            else
-            {
-                AddStreamOfEmptyWords(true,
-                                      (size/64) - SizeInBits
-                                      /64);
-                long newdata = (1L << leftover) + ((1L << leftover) - 1);
-                AddLiteralWord(newdata);
+            if( defaultvalue == false ) {
+
+			    int currentLeftover = SizeInBits % 64;
+			    int finalLeftover = size % 64;
+			    AddStreamOfEmptyWords(false, (size / 64) - SizeInBits
+			      / 64 + (finalLeftover != 0 ? 1 : 0)
+			      + (currentLeftover != 0 ? -1 : 0));
+      
+            } else {
+		      // next bit could be optimized
+		      while (((SizeInBits % 64) != 0) && (SizeInBits < size)) {
+		        	Set(SizeInBits);
+		      }
+		      AddStreamOfEmptyWords(defaultvalue, (size / 64)
+		        - SizeInBits / 64);
+		      // next bit could be optimized
+		      while (SizeInBits < size) {
+		        	Set(SizeInBits);
+		      }
             }
             SizeInBits = size;
             return true;
         }
-
         /// <summary>
         /// Sets the internal buffer to the minimum possible size required to contain
         /// the current bitarray.

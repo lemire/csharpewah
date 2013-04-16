@@ -48,6 +48,8 @@ public class example
         Console.WriteLine("End of demo.");
         Console.WriteLine("");
         var tr = new EwahCompressedBitArrayTest();
+        tr.EwahIteratorProblem();
+        tr.TayaraTest();
         tr.TestNot();
         tr.TestCardinality();
         tr.TestEwahCompressedBitArray();
@@ -59,6 +61,12 @@ public class example
         tr.TestMassiveXOR();
         tr.HabermaasTest();
         tr.VanSchaikTest();
+        tr.TestRunningLengthWord();
+        tr.TestSizeInBits1();
+        tr.TestHasNextSafe();
+        //tr.TestCloneEwahCompressedBitArray();
+        tr.TestSetGet();
+        tr.TestWithParameters();
 
         new EWAHCompressedBitArraySerializerTest().TestCustomSerializationStrategy();
 
