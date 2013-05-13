@@ -491,6 +491,19 @@ namespace Ewah
             AreEqual(bb, bitArraybb);
             Console.WriteLine("testing habermaasTest:ok");
         }
+        
+        [Test]
+        public void TestYnosa() 
+        {
+            Console.WriteLine("testing Ynosa");
+        	var a1 = new EwahCompressedBitArray();
+			var a2 = new EwahCompressedBitArray();
+			a1.Set(5);
+			a1.Set(15);
+			a2.Set(5);
+			Assert.IsTrue(a1.Intersects(a2));
+            Console.WriteLine("testing Ynosa:ok");
+        }
 
         [Test]
         public void TestCardinality()
@@ -928,8 +941,7 @@ namespace Ewah
 
 		    }
 		    Console.WriteLine(and2.Equals(inter));   
-		    
-		    
+		    Assert.IsTrue(ok);
             Assert.AreEqual(true,and2.Equals(inter));
 		    Assert.AreEqual(intersection ,and2.GetCardinality());
 		  } 

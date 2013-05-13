@@ -686,10 +686,11 @@ namespace Ewah
         {
             EwahEnumerator i = a.GetEwahEnumerator();
             EwahEnumerator j = GetEwahEnumerator();
-            if ((!i.HasNext()) || (!j.HasNext()))
+            if (!(i.HasNext() && j.HasNext()))
             {
                 return false;
             }
+            // at this point, this is safe:
             var rlwi = new BufferedRunningLengthWord(i.Next());
             var rlwj = new BufferedRunningLengthWord(j.Next());
             while (true)
@@ -699,7 +700,6 @@ namespace Ewah
                 BufferedRunningLengthWord predator = iIsPrey ? rlwj : rlwi;
                 long predatorrl;
                 long tobediscarded;
-
                 if (prey.RunningBit == false)
                 {
                     predator.DiscardFirstWords(prey.RunningLength);
@@ -711,14 +711,8 @@ namespace Ewah
                     predatorrl = predator.RunningLength;
                     long preyrl = prey.RunningLength;
                     tobediscarded = (predatorrl >= preyrl) ? preyrl : predatorrl;
-                    if (predator.RunningBit)
-                    {
-                        return true;
-                    }
-                    if (preyrl > tobediscarded)
-                    {
-                        return true;
-                    }
+                    if(predator.RunningBit) return true;
+                    if(preyrl - tobediscarded > 0) return true;
                     predator.DiscardFirstWords(preyrl);
                     prey.RunningLength = 0;
                 }
@@ -741,39 +735,23 @@ namespace Ewah
                         tobediscarded = (predatorrl >= nbreDirtyPrey)
                                             ? nbreDirtyPrey
                                             : predatorrl;
-                        if (tobediscarded > 0)
-                        {
-                            return true;
-                        }
+                        if(tobediscarded > 0) return true;
                         predator.DiscardFirstWords(tobediscarded);
                         prey.DiscardFirstWords(tobediscarded);
                     }
                 }
+                // all that is left to do now is to AND the dirty words
                 nbreDirtyPrey = prey.NumberOfLiteralWords;
                 if (nbreDirtyPrey > 0)
                 {
-                    for (int k = 0; k < nbreDirtyPrey; ++k)
-                    {
-                        if (iIsPrey)
-                        {
-                            if ((i.Buffer[prey.DirtyWordOffset + i.DirtyWords + k]
-                                 & j.Buffer[predator.DirtyWordOffset + j.DirtyWords + k]) != 0)
-                            {
-                                return true;
-                            }
-                            if ((i.Buffer[predator.DirtyWordOffset + i.DirtyWords
-                                          + k]
-                                 & j.Buffer[prey.DirtyWordOffset + j.DirtyWords + k]) != 0)
-                            {
-                                return true;
-                            }
-                        }
-                    }
+                    if(nbreDirtyPrey > 0) return true;
+                    predator.DiscardFirstWords(nbreDirtyPrey);
                 }
                 if (iIsPrey)
                 {
                     if (!i.HasNext())
                     {
+                        rlwi = null;
                         break;
                     }
                     rlwi.Reset(i.Next());
@@ -782,6 +760,7 @@ namespace Ewah
                 {
                     if (!j.HasNext())
                     {
+                        rlwj = null;
                         break;
                     }
                     rlwj.Reset(j.Next());
