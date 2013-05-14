@@ -17,7 +17,7 @@ namespace Ewah
         /// <summary>
         /// current running length word
         /// </summary>
-        private readonly RunningLengthWord _Rlw;
+        public readonly RunningLengthWord _Rlw;
 
         /// <summary>
         /// The size in words

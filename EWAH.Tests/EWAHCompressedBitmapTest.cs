@@ -940,9 +940,9 @@ namespace Ewah
 		    	}
 
 		    }
-		    Console.WriteLine(and2.Equals(inter));   
 		    Assert.IsTrue(ok);
             Assert.AreEqual(true,and2.Equals(inter));
+            Assert.AreEqual(inter.GetHashCode(),and2.GetHashCode());
 		    Assert.AreEqual(intersection ,and2.GetCardinality());
 		  } 
 		  

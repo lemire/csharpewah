@@ -181,14 +181,22 @@ namespace Ewah
         /// <returns></returns>
         public override int GetHashCode()
         {
-            int karprabin = 0;
-            const int b = 31;
-            for (int k = 0; k < _ActualSizeInWords; ++k)
-            {
-                karprabin += (int) (b*karprabin + (_Buffer[k] & ((1L << 32) - 1)));
-                karprabin += b*karprabin + (int) (((ulong) _Buffer[k]) >> 32);
+            long karprabin = 0;
+            const int B = 31;
+            EwahEnumerator i = this.GetEwahEnumerator();
+            while( i.HasNext() ) {
+              i.Next();
+              if (i._Rlw.RunningBit == true) {
+                 karprabin += B * karprabin
+                            + (i._Rlw.RunningLength & ((1L << 32) - 1));
+                 karprabin += B * karprabin + (long)(((ulong)i._Rlw.RunningLength) >> 32);
+              }
+              for (int k = 0; k <  i._Rlw.NumberOfLiteralWords; ++k) {
+                 karprabin += B * karprabin + (this._Buffer[i.DirtyWords + k] & ((1L << 32) - 1));
+                 karprabin += B * karprabin + (long)(((ulong)this._Buffer[i.DirtyWords + k]) >> 32);
+              }
             }
-            return SizeInBits ^ karprabin;
+            return (int) karprabin;
         }
 
         /// <summary>
