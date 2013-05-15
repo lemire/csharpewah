@@ -191,9 +191,13 @@ namespace Ewah
                             + (i._Rlw.RunningLength & ((1L << 32) - 1));
                  karprabin += B * karprabin + (long)(((ulong)i._Rlw.RunningLength) >> 32);
               }
-              for (int k = 0; k <  i._Rlw.NumberOfLiteralWords; ++k) {
-                 karprabin += B * karprabin + (this._Buffer[i.DirtyWords + k] & ((1L << 32) - 1));
-                 karprabin += B * karprabin + (long)(((ulong)this._Buffer[i.DirtyWords + k]) >> 32);
+              int dw = i.DirtyWords;
+              long numLiteralWords = i._Rlw.NumberOfLiteralWords;
+              long buf;
+              for (int k = 0; k <  numLiteralWords; ++k){
+                 buf = this._Buffer[dw + k];
+                 karprabin += B * karprabin + (buf & ((1L << 32) - 1));
+                 karprabin += B * karprabin + (long)(((ulong)buf) >> 32);
               }
             }
             return (int) karprabin;
