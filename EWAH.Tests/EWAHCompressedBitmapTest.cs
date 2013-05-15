@@ -504,6 +504,22 @@ namespace Ewah
 			Assert.IsTrue(a1.Intersects(a2));
             Console.WriteLine("testing Ynosa:ok");
         }
+        
+        [Test]
+        public void TestIntersectOddNess()
+        {
+            Console.WriteLine("testing IntersectOddNess");
+            var a1 = new EwahCompressedBitArray();
+            var a2 = new EwahCompressedBitArray();
+            a1.Set(12);
+            a2.Set(0);
+            a2.Set(1);
+            a2.Set(4);
+            a2.Set(14);
+            Assert.IsFalse(a1.Intersects(a2));
+            Console.WriteLine("testing IntersectOddNess:ok");
+        }
+
 
         [Test]
         public void TestCardinality()

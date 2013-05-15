@@ -31,6 +31,7 @@ public class example
         Console.WriteLine("");
         var tr = new EwahCompressedBitArrayTest();
         tr.TestYnosa();
+        tr.TestIntersectOddNess();
         tr.testsetSizeInBits();
         tr.SsiYanKaiTest();
         tr.testDebugSetSizeInBitsTest();

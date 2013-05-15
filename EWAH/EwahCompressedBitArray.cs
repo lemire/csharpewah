@@ -750,9 +750,25 @@ namespace Ewah
                 }
                 // all that is left to do now is to AND the dirty words
                 nbreDirtyPrey = prey.NumberOfLiteralWords;
+                
                 if (nbreDirtyPrey > 0)
                 {
-                    if(nbreDirtyPrey > 0) return true;
+                    for (int k = 0; k < nbreDirtyPrey; ++k)
+                    {
+                        if (iIsPrey)
+                        {
+                            if((i.Buffer[prey.DirtyWordOffset + i.DirtyWords + k]
+                                          & j.Buffer[predator.DirtyWordOffset + j.DirtyWords + k]) != 0 ) 
+                                          return true;
+                        }
+                        else
+                        {
+                            if((i.Buffer[predator.DirtyWordOffset + i.DirtyWords
+                                                   + k]
+                                          & j.Buffer[prey.DirtyWordOffset + j.DirtyWords + k]) != 0)
+                                          return true;
+                        }
+                    }
                     predator.DiscardFirstWords(nbreDirtyPrey);
                 }
                 if (iIsPrey)
