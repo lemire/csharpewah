@@ -1387,7 +1387,7 @@ namespace Ewah
                 PushBack(0);
                 _Rlw.Position = _ActualSizeInWords - 1;
                 ++wordsadded;
-                wordsadded += AddStreamOfDirtyWords(data,
+                wordsadded += AddStreamOfNegatedDirtyWords(data,
                                                     start + whatwecanadd,
                                                     leftovernumber);
             }
