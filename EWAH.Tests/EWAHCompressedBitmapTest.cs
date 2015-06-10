@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Ewah
 {
-/*
- * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
- * Licensed under APL 2.0.
- */
+    /*
+     * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
+     * Licensed under APL 2.0.
+     */
     public static class Ext
     {
         public static void AddRange<T>(this HashSet<T> set, IEnumerable<T> newElems)
@@ -31,9 +31,10 @@ namespace Ewah
             return -1;
         }
 
-        public static int Cardinality(this BitArray bitArray)
+        public static ulong Cardinality(this BitArray bitArray)
         {
-            int res = 0;
+            ulong res = 0;
+
             for (int ii = 0; ii < bitArray.Length; ii++)
             {
                 if (bitArray.Get((ii)))
@@ -69,27 +70,27 @@ namespace Ewah
         }
     }
 
-/**
- * This class is used for unit testing.
- */
+    /**
+     * This class is used for unit testing.
+     */
 
 
-    [TestFixture]
+    [TestClass]
     public sealed class EwahCompressedBitArrayTest
     {
         /** The Constant MEGA: a large integer. */
-        private const int Mega = 8*1024*1024;
+        private const int Mega = 8 * 1024 * 1024;
 
         /** The Constant TEST_BS_SIZE: used to represent the size of a large bitmap. */
-        private const int TestBsSize = 8*Mega;
+        private const int TestBsSize = 8 * Mega;
 
-  /**
-   * Function used in a test inspired by Federico Fissore.
-   *
-   * @param size the number of set bits
-   * @param seed the random seed
-   * @return the pseudo-random array int[]
-   */
+        /**
+         * Function used in a test inspired by Federico Fissore.
+         *
+         * @param size the number of set bits
+         * @param seed the random seed
+         * @return the pseudo-random array int[]
+         */
 
         private static int[] CreateSortedIntArrayOfBitsToSet(int size, int seed)
         {
@@ -127,44 +128,49 @@ namespace Ewah
             return answer;
         }
 
-   /**
-   * Pseudo-non-deterministic test inspired by S.J.vanSchaik.
-   * (Yes, non-deterministic tests are bad, but the test is actually deterministic.)
-   */
+        /**
+        * Pseudo-non-deterministic test inspired by S.J.vanSchaik.
+        * (Yes, non-deterministic tests are bad, but the test is actually deterministic.)
+        */
 
-   /**
-   * Pseudo-non-deterministic test inspired by Federico Fissore.
-   *
-   * @param length the number of set bits in a bitmap
-   */
+        /**
+        * Pseudo-non-deterministic test inspired by Federico Fissore.
+        *
+        * @param length the number of set bits in a bitmap
+        */
 
         private static void ShouldSetBits(int length)
         {
             Console.WriteLine("testing shouldSetBits " + length);
+
             int[] bitsToSet = CreateSortedIntArrayOfBitsToSet(length, 434222);
             var ewah = new EwahCompressedBitArray();
+
             Console.WriteLine(" ... setting " + bitsToSet.Length + " values");
+
             foreach (int i in bitsToSet)
             {
                 ewah.Set(i);
             }
+
             Console.WriteLine(" ... verifying " + bitsToSet.Length + " values");
             AreEqual(ewah, bitsToSet);
+
             Console.WriteLine(" ... checking GetCardinality");
-            Assert.AreEqual(bitsToSet.Length, ewah.GetCardinality());
+            Assert.AreEqual((ulong)bitsToSet.Length, ewah.GetCardinality());
         }
 
-   /**
-   * Test running length word.
-   */
+        /**
+        * Test running length word.
+        */
 
-   /**
-   * Convenience function to assess equality between an array and an enumerator over
-   * Integers
-   *
-   * @param i the enumerator
-   * @param array the array
-   */
+        /**
+        * Convenience function to assess equality between an array and an enumerator over
+        * Integers
+        *
+        * @param i the enumerator
+        * @param array the array
+        */
 
         private static void AreEqual(IEnumerable<int> i, int[] array)
         {
@@ -186,13 +192,13 @@ namespace Ewah
             }
         }
 
-   /**
-   * Convenience function to assess equality between a compressed BitArray 
-   * and an uncompressed BitArray
-   *
-   * @param x the compressed BitArray/bitmap
-   * @param y the uncompressed BitArray/bitmap
-   */
+        /**
+        * Convenience function to assess equality between a compressed BitArray 
+        * and an uncompressed BitArray
+        *
+        * @param x the compressed BitArray/bitmap
+        * @param y the uncompressed BitArray/bitmap
+        */
 
         private static void AreEqual(EwahCompressedBitArray x, BitArray y)
         {
@@ -209,16 +215,16 @@ namespace Ewah
         }
 
 
-  /**
-   * a non-deterministic test proposed by Marc Polizzi.
-   *
-   * @param maxlength the maximum uncompressed size of the bitmap
-   */
+        /**
+         * a non-deterministic test proposed by Marc Polizzi.
+         *
+         * @param maxlength the maximum uncompressed size of the bitmap
+         */
 
         public static void PolizziTest(int maxlength)
         {
             Console.WriteLine("Polizzi test with max length = " + maxlength);
-            for (int k = 0; k < 10000; k+= 77)
+            for (int k = 0; k < 10000; k += 77)
             {
                 var rnd = new Random();
                 var ewahBitmap1 = new EwahCompressedBitArray();
@@ -247,21 +253,21 @@ namespace Ewah
                 // XOR
                 {
                     EwahCompressedBitArray xorEwahBitmap = ewahBitmap1.Xor(ewahBitmap2);
-                    var xorclrBitArray = (BitArray) clrBitArray1.Clone();
+                    var xorclrBitArray = (BitArray)clrBitArray1.Clone();
                     xorclrBitArray.Xor(clrBitArray2);
                     assertEquals(xorclrBitArray, xorEwahBitmap);
                 }
                 // AND
                 {
                     EwahCompressedBitArray andEwahBitmap = ewahBitmap1.And(ewahBitmap2);
-                    var andclrBitArray = (BitArray) clrBitArray1.Clone();
+                    var andclrBitArray = (BitArray)clrBitArray1.Clone();
                     andclrBitArray.And(clrBitArray2);
                     assertEquals(andclrBitArray, andEwahBitmap);
                 }
                 // AND
                 {
                     EwahCompressedBitArray andEwahBitmap = ewahBitmap2.And(ewahBitmap1);
-                    var andclrBitArray = (BitArray) clrBitArray1.Clone();
+                    var andclrBitArray = (BitArray)clrBitArray1.Clone();
                     andclrBitArray.And(clrBitArray2);
                     assertEquals(andclrBitArray, andEwahBitmap);
                 }
@@ -269,7 +275,7 @@ namespace Ewah
                 {
                     EwahCompressedBitArray andNotEwahBitmap = ewahBitmap1
                         .AndNot(ewahBitmap2);
-                    var andNotclrBitArray = (BitArray) clrBitArray1.Clone();
+                    var andNotclrBitArray = (BitArray)clrBitArray1.Clone();
                     andNotclrBitArray.AndNot(clrBitArray2);
                     assertEquals(andNotclrBitArray, andNotEwahBitmap);
                 }
@@ -277,34 +283,34 @@ namespace Ewah
                 {
                     EwahCompressedBitArray andNotEwahBitmap = ewahBitmap2
                         .AndNot(ewahBitmap1);
-                    var andNotclrBitArray = (BitArray) clrBitArray2.Clone();
+                    var andNotclrBitArray = (BitArray)clrBitArray2.Clone();
                     andNotclrBitArray.AndNot(clrBitArray1);
                     assertEquals(andNotclrBitArray, andNotEwahBitmap);
                 }
                 // OR
                 {
                     EwahCompressedBitArray orEwahBitmap = ewahBitmap1.Or(ewahBitmap2);
-                    var orclrBitArray = (BitArray) clrBitArray1.Clone();
+                    var orclrBitArray = (BitArray)clrBitArray1.Clone();
                     orclrBitArray.Or(clrBitArray2);
                     assertEquals(orclrBitArray, orEwahBitmap);
                 }
                 // OR
                 {
                     EwahCompressedBitArray orEwahBitmap = ewahBitmap2.Or(ewahBitmap1);
-                    var orclrBitArray = (BitArray) clrBitArray1.Clone();
+                    var orclrBitArray = (BitArray)clrBitArray1.Clone();
                     orclrBitArray.Or(clrBitArray2);
                     assertEquals(orclrBitArray, orEwahBitmap);
                 }
             }
         }
 
-  /**
-   * Assess equality between an uncompressed bitmap and a compressed one,
-   *  part of a test contributed by Marc Polizzi.
-   *
-   * @param clrBitArray the uncompressed bitmap
-   * @param ewahBitmap the compressed bitmap
-   */
+        /**
+         * Assess equality between an uncompressed bitmap and a compressed one,
+         *  part of a test contributed by Marc Polizzi.
+         *
+         * @param clrBitArray the uncompressed bitmap
+         * @param ewahBitmap the compressed bitmap
+         */
 
         private static void assertEquals(BitArray clrBitArray, EwahCompressedBitArray ewahBitmap)
         {
@@ -313,13 +319,13 @@ namespace Ewah
             assertCardinality(clrBitArray, ewahBitmap);
         }
 
-  /**
-   * Assess equality between an uncompressed bitmap and a compressed one,
-   * part of a test contributed by Marc Polizzi
-   *
-   * @param clrBitArray the uncompressed bitmap
-   * @param ewahBitmap the compressed bitmap
-   */
+        /**
+         * Assess equality between an uncompressed bitmap and a compressed one,
+         * part of a test contributed by Marc Polizzi
+         *
+         * @param clrBitArray the uncompressed bitmap
+         * @param ewahBitmap the compressed bitmap
+         */
 
         private static void assertCardinality(BitArray clrBitArray,
                                               EwahCompressedBitArray ewahBitmap)
@@ -328,13 +334,13 @@ namespace Ewah
         }
 
         // 
-  /**
-   * Assess equality between an uncompressed bitmap and a compressed one,
-   * part of a test contributed by Marc Polizzi
-   *
-   * @param clrBitArray the clr BitArray
-   * @param ewahBitmap the ewah BitArray
-   */
+        /**
+         * Assess equality between an uncompressed bitmap and a compressed one,
+         * part of a test contributed by Marc Polizzi
+         *
+         * @param clrBitArray the clr BitArray
+         * @param ewahBitmap the ewah BitArray
+         */
 
         private static void assertEqualsIterator(BitArray clrBitArray, EwahCompressedBitArray ewahBitmap)
         {
@@ -352,12 +358,12 @@ namespace Ewah
         }
 
         // part of a test contributed by Marc Polizzi
-  /**
-   * Assert equals positions.
-   *
-   * @param clrBitArray the jdk bitmap
-   * @param ewahBitmap the ewah bitmap
-   */
+        /**
+         * Assert equals positions.
+         *
+         * @param clrBitArray the jdk bitmap
+         * @param ewahBitmap the ewah bitmap
+         */
 
         private static void assertEqualsPositions(BitArray clrBitArray,
                                                   EwahCompressedBitArray ewahBitmap)
@@ -379,12 +385,12 @@ namespace Ewah
             }
         }
 
-  /**
-   * Assert equals positions.
-   *
-   * @param ewahBitmap1 the ewah bitmap1
-   * @param ewahBitmap2 the ewah bitmap2
-   */
+        /**
+         * Assert equals positions.
+         *
+         * @param ewahBitmap1 the ewah bitmap1
+         * @param ewahBitmap2 the ewah bitmap2
+         */
 
         private static void assertEqualsPositions(IList<int> positions1, IList<int> positions2)
         {
@@ -395,7 +401,7 @@ namespace Ewah
             }
         }
 
-        [Test]
+        [TestMethod]
         public void EwahIteratorProblem()
         {
             Console.WriteLine("testing ArnonMoscona");
@@ -415,7 +421,7 @@ namespace Ewah
 
             for (k = 2; k <= 1024; k *= 2)
             {
-                int[] bitsToSet = CreateSortedIntArrayOfBitsToSet(k, 434455 + 5*k);
+                int[] bitsToSet = CreateSortedIntArrayOfBitsToSet(k, 434455 + 5 * k);
                 var ewah = new EwahCompressedBitArray();
                 foreach (int i in bitsToSet)
                 {
@@ -424,45 +430,49 @@ namespace Ewah
                 assertEqualsPositions(bitsToSet, ewah.GetPositions());
             }
         }
-        
-        
-        [Test]
-		  public void TayaraTest() {
-		    Console.WriteLine("Tayara test");
-		    for(int offset = 64; offset<(1<<30);offset*=2){
-		      EwahCompressedBitArray a = new EwahCompressedBitArray();
-		      EwahCompressedBitArray b = new EwahCompressedBitArray();
-		      for(int k = 0; k< 64; ++k)  {
-		        a.Set(offset+k);
-		        b.Set(offset+k);
-		      }
-		      Assert.AreEqual(a.And(b).Equals(a),true);
-		      Assert.AreEqual(a.Or(b).Equals(a),true);
-		    }
-		  }
-        
-        
-        [Test]
-        public void TestNot()
+
+
+        [TestMethod]
+        public void TayaraTest()
         {
-           Console.WriteLine("testing not");
-           var bmp= new EwahCompressedBitArray();
-           for (int i = 0; i <= 184; i++) {
-               bmp.Set(i);
-           }
-           Assert.AreEqual(185, bmp.GetCardinality());
-           bmp.Not();
-           Assert.AreEqual(0, bmp.GetCardinality());
-           Console.WriteLine("testing not:ok");
+            Console.WriteLine("Tayara test");
+            for (int offset = 64; offset < (1 << 30); offset *= 2)
+            {
+                EwahCompressedBitArray a = new EwahCompressedBitArray();
+                EwahCompressedBitArray b = new EwahCompressedBitArray();
+                for (int k = 0; k < 64; ++k)
+                {
+                    a.Set(offset + k);
+                    b.Set(offset + k);
+                }
+                Assert.AreEqual(a.And(b).Equals(a), true);
+                Assert.AreEqual(a.Or(b).Equals(a), true);
+            }
         }
 
-        [Test]
+
+        [TestMethod]
+        public void TestNot()
+        {
+            Console.WriteLine("testing not");
+            var bmp = new EwahCompressedBitArray();
+            for (int i = 0; i <= 184; i++)
+            {
+                bmp.Set(i);
+            }
+            Assert.AreEqual(185UL, bmp.GetCardinality());
+            bmp.Not();
+            Assert.AreEqual(0UL, bmp.GetCardinality());
+            Console.WriteLine("testing not:ok");
+        }
+
+        [TestMethod]
         public void HabermaasTest()
         {
             Console.WriteLine("testing habermaasTest");
             var bitArrayaa = new BitArray(1000131);
             var aa = new EwahCompressedBitArray();
-            int[] val = {55400, 1000000, 1000128};
+            int[] val = { 55400, 1000000, 1000128 };
             foreach (int t in val)
             {
                 aa.Set(t);
@@ -483,29 +493,29 @@ namespace Ewah
             assertEquals(bitArrayab, ab);
             EwahCompressedBitArray bb = aa.Or(ab);
             EwahCompressedBitArray bbAnd = aa.And(ab);
-            var bitArraybb = (BitArray) bitArrayaa.Clone();
+            var bitArraybb = (BitArray)bitArrayaa.Clone();
             bitArraybb.Or(bitArrayab);
-            var bitArraybbAnd = (BitArray) bitArrayaa.Clone();
+            var bitArraybbAnd = (BitArray)bitArrayaa.Clone();
             bitArraybbAnd.And(bitArrayab);
             AreEqual(bbAnd, bitArraybbAnd);
             AreEqual(bb, bitArraybb);
             Console.WriteLine("testing habermaasTest:ok");
         }
-        
-        [Test]
-        public void TestYnosa() 
+
+        [TestMethod]
+        public void TestYnosa()
         {
             Console.WriteLine("testing Ynosa");
-        	var a1 = new EwahCompressedBitArray();
-			var a2 = new EwahCompressedBitArray();
-			a1.Set(5);
-			a1.Set(15);
-			a2.Set(5);
-			Assert.IsTrue(a1.Intersects(a2));
+            var a1 = new EwahCompressedBitArray();
+            var a2 = new EwahCompressedBitArray();
+            a1.Set(5);
+            a1.Set(15);
+            a2.Set(5);
+            Assert.IsTrue(a1.Intersects(a2));
             Console.WriteLine("testing Ynosa:ok");
         }
-        
-        [Test]
+
+        [TestMethod]
         public void TestIntersectOddNess()
         {
             Console.WriteLine("testing IntersectOddNess");
@@ -521,18 +531,20 @@ namespace Ewah
         }
 
 
-        [Test]
+        [TestMethod]
         public void TestCardinality()
         {
             Console.WriteLine("testing EWAH GetCardinality");
             var bitmap = new EwahCompressedBitArray();
             bitmap.Set(int.MaxValue);
-            // Console.format("Total Items %d\n", bitmap.GetCardinality());
-            Assert.AreEqual(bitmap.GetCardinality(), 1);
+
+            //Assert.AreEqual(true, false);
+            Console.WriteLine("Total Items %d\n", bitmap.GetCardinality());
+            Assert.AreEqual(bitmap.GetCardinality(), 1UL);
             Console.WriteLine("testing EWAH GetCardinality:ok");
         }
 
-        [Test]
+        [TestMethod]
         public void TestEwahCompressedBitArray()
         {
             Console.WriteLine("testing EWAH (basic)");
@@ -600,12 +612,12 @@ namespace Ewah
             Console.WriteLine("testing EWAH (basic):ok");
         }
 
-        [Test]
+        [TestMethod]
         public void TestExternalization()
         {
             Console.WriteLine("testing EWAH externalization");
             var ewcb = new EwahCompressedBitArray();
-            int[] val = {5, 4400, 44600, 55400, 1000000};
+            int[] val = { 5, 4400, 44600, 55400, 1000000 };
             foreach (int t in val)
             {
                 ewcb.Set(t);
@@ -616,14 +628,14 @@ namespace Ewah
             bf.Serialize(bos, ewcb);
             bos.Position = 0;
 
-            ewcb = (EwahCompressedBitArray) bf.Deserialize(bos);
+            ewcb = (EwahCompressedBitArray)bf.Deserialize(bos);
 
             List<int> result = ewcb.GetPositions();
             AreEqual(val, result);
             Console.WriteLine("testing EWAH externalization:ok");
         }
 
-        [Test]
+        [TestMethod]
         public void TestLargeEwahCompressedBitArray()
         {
             Console.WriteLine("testing EWAH over a large array");
@@ -637,11 +649,11 @@ namespace Ewah
             Console.WriteLine("testing EWAH over a large array:ok");
         }
 
-  /**
-   * Test massive and.
-   */
+        /**
+         * Test massive and.
+         */
 
-        [Test]
+        [TestMethod]
         public void TestMassiveAnd()
         {
             Console.WriteLine("testing massive logical and");
@@ -650,7 +662,7 @@ namespace Ewah
                 ewah[k] = new EwahCompressedBitArray();
             for (int k = 0; k < 30000; ++k)
             {
-                ewah[(k + 2*k*k)%ewah.Length].Set(k);
+                ewah[(k + 2 * k * k) % ewah.Length].Set(k);
             }
             EwahCompressedBitArray answer = ewah[0];
             for (int k = 1; k < ewah.Length; ++k)
@@ -662,15 +674,15 @@ namespace Ewah
             Console.WriteLine("testing massive logical and:ok");
         }
 
-  /**
-   * Test massive xor.
-   */
+        /**
+         * Test massive xor.
+         */
 
-  /**
-   * Test massive and not.
-   */
+        /**
+         * Test massive and not.
+         */
 
-        [Test]
+        [TestMethod]
         public void TestMassiveAndNot()
         {
             Console.WriteLine("testing massive and not");
@@ -680,7 +692,7 @@ namespace Ewah
                 ewah[k] = new EwahCompressedBitArray();
             for (int k = 0; k < 30000; ++k)
             {
-                ewah[(k + 2*k*k)%ewah.Length].Set(k);
+                ewah[(k + 2 * k * k) % ewah.Length].Set(k);
             }
             EwahCompressedBitArray answer = ewah[0];
             EwahCompressedBitArray answer2 = ewah[0];
@@ -691,7 +703,7 @@ namespace Ewah
                 EwahCompressedBitArray copy = null;
                 try
                 {
-                    copy = (EwahCompressedBitArray) ewah[k].Clone();
+                    copy = (EwahCompressedBitArray)ewah[k].Clone();
                     copy.Not();
                     answer2.And(copy);
                     assertEqualsPositions(answer.GetPositions(), answer2.GetPositions());
@@ -704,11 +716,11 @@ namespace Ewah
             Console.WriteLine("testing massive and not:ok");
         }
 
-  /**
-   * Test massive or.
-   */
+        /**
+         * Test massive or.
+         */
 
-        [Test]
+        [TestMethod]
         public void TestMassiveOr()
         {
             Console.WriteLine("testing massive logical or (can take a couple of minutes)");
@@ -726,8 +738,8 @@ namespace Ewah
                     assertEqualsPositions(bset[k], ewah[k]);
                 for (k = 0; k < howmany; ++k)
                 {
-                    ewah[(k + 2*k*k)%ewah.Length].Set(k);
-                    bset[(k + 2*k*k)%ewah.Length].Set(k, true);
+                    ewah[(k + 2 * k * k) % ewah.Length].Set(k);
+                    bset[(k + 2 * k * k) % ewah.Length].Set(k, true);
                 }
                 for (k = 0; k < N; ++k)
                     assertEqualsPositions(bset[k], ewah[k]);
@@ -753,7 +765,7 @@ namespace Ewah
             Console.WriteLine("testing massive logical or:ok");
         }
 
-        [Test]
+        [TestMethod]
         public void TestMassiveXOR()
         {
             Console.WriteLine("testing massive xor (can take a couple of minutes)");
@@ -766,8 +778,8 @@ namespace Ewah
                 bset[k] = new BitArray(30000);
             for (int k = 0; k < 30000; ++k)
             {
-                ewah[(k + 2*k*k)%ewah.Length].Set(k);
-                bset[(k + 2*k*k)%ewah.Length].Set(k, true);
+                ewah[(k + 2 * k * k) % ewah.Length].Set(k);
+                bset[(k + 2 * k * k) % ewah.Length].Set(k, true);
             }
             EwahCompressedBitArray answer = ewah[0];
             BitArray BitArrayanswer = bset[0];
@@ -788,7 +800,7 @@ namespace Ewah
             Console.WriteLine("testing massive xor:ok");
         }
 
-        [Test]
+        [TestMethod]
         public void TestRunningLengthWord()
         {
             Console.WriteLine("testing RunningLengthWord");
@@ -806,7 +818,7 @@ namespace Ewah
             Assert.AreEqual(false, rlw.RunningBit);
             Assert.AreEqual(0, rlw.RunningLength);
 
-            for (var rl = (int) RunningLengthWord.LargestLiteralCount; rl >= 0; rl -= 64*1024)
+            for (var rl = (int)RunningLengthWord.LargestLiteralCount; rl >= 0; rl -= 64 * 1024)
             {
                 rlw.NumberOfLiteralWords = rl;
                 Assert.AreEqual(rl, rlw.NumberOfLiteralWords);
@@ -818,7 +830,7 @@ namespace Ewah
                 Assert.AreEqual(0, rlw.RunningLength);
             }
 
-            for (long rl = 0; rl <= RunningLengthWord.LargestRunningLengthCount; rl += 64*1024)
+            for (long rl = 0; rl <= RunningLengthWord.LargestRunningLengthCount; rl += 64 * 1024)
             {
                 rlw.RunningLength = rl;
                 Assert.AreEqual(0, rlw.NumberOfLiteralWords);
@@ -829,9 +841,9 @@ namespace Ewah
                 Assert.AreEqual(false, rlw.RunningBit);
                 Assert.AreEqual(0, rlw.RunningLength);
             }
-        
+
             rlw.RunningBit = true;
-            for (long rl = 0; rl <= RunningLengthWord.LargestRunningLengthCount; rl += 64*1024)
+            for (long rl = 0; rl <= RunningLengthWord.LargestRunningLengthCount; rl += 64 * 1024)
             {
                 rlw.RunningLength = rl;
                 Assert.AreEqual(0, rlw.NumberOfLiteralWords);
@@ -843,7 +855,7 @@ namespace Ewah
                 Assert.AreEqual(0, rlw.RunningLength);
             }
 
-            for (long rl = 0; rl <= RunningLengthWord.LargestLiteralCount; rl += 64*128)
+            for (long rl = 0; rl <= RunningLengthWord.LargestLiteralCount; rl += 64 * 128)
             {
                 rlw.NumberOfLiteralWords = rl;
                 Assert.AreEqual(rl, rlw.NumberOfLiteralWords);
@@ -856,138 +868,155 @@ namespace Ewah
             }
             Console.WriteLine("testing RunningLengthWord:ok");
         }
-        
-  [Test]
-  public void testsetSizeInBits() {
-	  Console.WriteLine("testing setSizeInBits");
-	  for(int k = 0; k < 4096; ++k) {
-		  EwahCompressedBitArray ewah = new EwahCompressedBitArray();
-		  ewah.SizeInBits = k;
-		  Assert.AreEqual(ewah.SizeInBits,k);
-		  Assert.AreEqual(ewah.GetCardinality(),0);
-		  EwahCompressedBitArray ewah2 = new EwahCompressedBitArray();
-		  ewah2.SetSizeInBits(k, false);
-		  Assert.AreEqual(ewah2.SizeInBits,k);
-		  Assert.AreEqual(ewah2.GetCardinality(),0);
-		  EwahCompressedBitArray ewah3 = new EwahCompressedBitArray();
-		  for(int i = 0; i < k ; ++i) {
-			  ewah3.Set(i);
-		  }
-		  Assert.AreEqual(ewah3.SizeInBits,k);
-		  Assert.AreEqual(ewah3.GetCardinality(),k);
-		  EwahCompressedBitArray ewah4 = new EwahCompressedBitArray();
-		  ewah4.SetSizeInBits(k, true);
-		  Assert.AreEqual(ewah4.SizeInBits,k);
-		  Assert.AreEqual(ewah4.GetCardinality(),k);
-	  }
-  }
 
-		  [Test]
-		  public void TestSizeInBits1() {
-		  	  Console.WriteLine("testing TestSizeInBits1");
-		      EwahCompressedBitArray bitmap = new EwahCompressedBitArray();
-		      bitmap.SetSizeInBits(1, false);
-		      Assert.AreEqual(1, bitmap.SizeInBits);
-		      bitmap.Not();
-		      Assert.AreEqual(1, bitmap.GetCardinality());
-		  }
-		
-		  [Test]
-		   public void TestHasNextSafe() {
-		  	  Console.WriteLine("testing TestHasNextSafe");
-		      EwahCompressedBitArray bitmap = new EwahCompressedBitArray();
-		      bitmap.Set(0);
-		      IEnumerator<int> it = ((IEnumerable<int>)bitmap).GetEnumerator();
-		      Assert.AreEqual(it.MoveNext(),true);
-		      Assert.AreEqual(0, it.Current);
-		  }
-		  
-	  [Test]
-	 public void testDebugSetSizeInBitsTest() {      
-		  Console.WriteLine("testing DebugSetSizeInBits");
-		  EwahCompressedBitArray b = new EwahCompressedBitArray();
-	      
-	      b.Set(4);
-	      
-	      b.SetSizeInBits(6, true);
-	       
-	      List<int> positions = b.GetPositions();
-	      
-	      Assert.AreEqual(2, positions.Count);
-	      Assert.AreEqual(4, positions[0]);
-	      Assert.AreEqual(5, positions[1]);
-	      
-		  IEnumerator<int> iterator = ((IEnumerable<int>)b).GetEnumerator();
-	      Assert.AreEqual(true,iterator.MoveNext());
-	      Assert.AreEqual(4, iterator.Current);
-	      Assert.AreEqual(true,iterator.MoveNext());
-	      Assert.AreEqual(5, iterator.Current);
-	      Assert.AreEqual(false,iterator.MoveNext());
-	      
-	   }
-	   
-	    [Test]
-			public void SsiYanKaiTest() {
-		    Console.WriteLine("testing SsiYanKaiTest");
-		    EwahCompressedBitArray a = EwahCompressedBitArray.BitmapOf(39935, 39936, 39937, 39938, 39939, 39940, 39941, 39942, 39943, 39944, 39945, 39946, 39947, 39948, 39949, 39950, 39951, 39952, 39953, 39954, 39955, 39956, 39957, 39958, 39959, 39960, 39961, 39962, 39963, 39964, 39965, 39966, 39967, 39968, 39969, 39970, 39971, 39972, 39973, 39974, 39975, 39976, 39977, 39978, 39979, 39980, 39981, 39982, 39983, 39984, 39985, 39986, 39987, 39988, 39989, 39990, 39991, 39992, 39993, 39994, 39995, 39996, 39997, 39998, 39999, 40000, 40001, 40002, 40003, 40004, 40005, 40006, 40007, 40008, 40009, 40010, 40011, 40012, 40013, 40014, 40015, 40016, 40017, 40018, 40019, 40020, 40021, 40022, 40023, 40024, 40025, 40026, 40027, 40028, 40029, 40030, 40031, 40032, 40033, 40034, 40035, 40036, 40037, 40038, 40039, 40040, 40041, 40042, 40043, 40044, 40045, 40046, 40047, 40048, 40049, 40050, 40051, 40052, 40053, 40054, 40055, 40056, 40057, 40058, 40059, 40060, 40061, 40062, 40063, 40064, 40065, 40066, 40067, 40068, 40069, 40070, 40071, 40072, 40073, 40074, 40075, 40076, 40077, 40078, 40079, 40080, 40081, 40082, 40083, 40084, 40085, 40086, 40087, 40088, 40089, 40090, 40091, 40092, 40093, 40094, 40095, 40096, 40097, 40098, 40099, 40100);
-		    EwahCompressedBitArray b = EwahCompressedBitArray.BitmapOf(39935, 39936, 39937, 39938, 39939, 39940, 39941, 39942, 39943, 39944, 39945, 39946, 39947, 39948, 39949, 39950, 39951, 39952, 39953, 39954, 39955, 39956, 39957, 39958, 39959, 39960, 39961, 39962, 39963, 39964, 39965, 39966, 39967, 39968, 39969, 39970, 39971, 39972, 39973, 39974, 39975, 39976, 39977, 39978, 39979, 39980, 39981, 39982, 39983, 39984, 39985, 39986, 39987, 39988, 39989, 39990, 39991, 39992, 39993, 39994, 39995, 39996, 39997, 39998, 39999, 270000);
-		    HashSet<int> aPositions = new HashSet<int>(a.GetPositions());    
-		    int intersection = 0;
-		    EwahCompressedBitArray inter = new EwahCompressedBitArray();
-		    HashSet<int> bPositions = new HashSet<int>(b.GetPositions());
-		    foreach (int integer in bPositions) {
-		       if (aPositions.Contains(integer)) {
-		         inter.Set(integer);
-		          ++intersection;
-		       }
-		    }
-		    EwahCompressedBitArray and2 = a.And(b);      
-		    List<int> l1 = inter.GetPositions();
-		    List<int> l2 = and2.GetPositions();
-		    var ok = true;
-		    if(l1.Count != l2.Count) { 
-		        Console.WriteLine("cardinality differs = "+l1.Count+" "+l2.Count);
-		        ok = false;
-		    }
-		    for(int k = 0; k< l1.Count; ++k) {
-		    	if(l1[k] != l2[k]) {
-		    			    Console.WriteLine("differ at "+k+" = "+l1[k]+" "+l2[k]);
-		    			    ok = false;
-		    	}
+        [TestMethod]
+        public void testsetSizeInBits()
+        {
+            Console.WriteLine("testing setSizeInBits");
+            for (int k = 0; k < 4096; ++k)
+            {
+                EwahCompressedBitArray ewah = new EwahCompressedBitArray();
+                ewah.SizeInBits = k;
+                Assert.AreEqual(ewah.SizeInBits, k);
+                Assert.AreEqual(ewah.GetCardinality(), 0UL);
 
-		    }
-		    Assert.IsTrue(ok);
-            Assert.AreEqual(true,and2.Equals(inter));
-            Assert.AreEqual(inter.GetHashCode(),and2.GetHashCode());
-		    Assert.AreEqual(intersection ,and2.GetCardinality());
-		  } 
-		  
-        [Test]
-		public void TestCloneEwahCompressedBitArray()
-		{
-		    Console.WriteLine("testing EWAH clone");
-		    EwahCompressedBitArray a = new EwahCompressedBitArray();
-		    a.Set(410018);
-		    a.Set(410019);
-		    a.Set(410020);
-		    a.Set(410021);
-		    a.Set(410022);
-		    a.Set(410023);
-		
-		    EwahCompressedBitArray b = (EwahCompressedBitArray)a.Clone();
-		
-		    a.SetSizeInBits(487123, false);
-		    b.SetSizeInBits(487123, false);
-		
-		    Assert.AreEqual(a, b);
-		}
+                EwahCompressedBitArray ewah2 = new EwahCompressedBitArray();
+                ewah2.SetSizeInBits(k, false);
+                Assert.AreEqual(ewah2.SizeInBits, k);
+                Assert.AreEqual(ewah2.GetCardinality(), 0UL);
 
-        [Test]
+                EwahCompressedBitArray ewah3 = new EwahCompressedBitArray();
+                for (int i = 0; i < k; ++i)
+                {
+                    ewah3.Set(i);
+                }
+                Assert.AreEqual(ewah3.SizeInBits, k);
+                Assert.AreEqual(ewah3.GetCardinality(), (ulong)k);
+
+                EwahCompressedBitArray ewah4 = new EwahCompressedBitArray();
+                ewah4.SetSizeInBits(k, true);
+                Assert.AreEqual(ewah4.SizeInBits, k);
+                Assert.AreEqual(ewah4.GetCardinality(), (ulong)k);
+            }
+        }
+
+        [TestMethod]
+        public void TestSizeInBits1()
+        {
+            Console.WriteLine("testing TestSizeInBits1");
+
+            EwahCompressedBitArray bitmap = new EwahCompressedBitArray();
+            bitmap.SetSizeInBits(1, false);
+            Assert.AreEqual(1, bitmap.SizeInBits);
+
+            bitmap.Not();
+            Assert.AreEqual(1UL, bitmap.GetCardinality());
+        }
+
+        [TestMethod]
+        public void TestHasNextSafe()
+        {
+            Console.WriteLine("testing TestHasNextSafe");
+            EwahCompressedBitArray bitmap = new EwahCompressedBitArray();
+            bitmap.Set(0);
+            IEnumerator<int> it = ((IEnumerable<int>)bitmap).GetEnumerator();
+            Assert.AreEqual(it.MoveNext(), true);
+            Assert.AreEqual(0, it.Current);
+        }
+
+        [TestMethod]
+        public void testDebugSetSizeInBitsTest()
+        {
+            Console.WriteLine("testing DebugSetSizeInBits");
+            EwahCompressedBitArray b = new EwahCompressedBitArray();
+
+            b.Set(4);
+
+            b.SetSizeInBits(6, true);
+
+            List<int> positions = b.GetPositions();
+
+            Assert.AreEqual(2, positions.Count);
+            Assert.AreEqual(4, positions[0]);
+            Assert.AreEqual(5, positions[1]);
+
+            IEnumerator<int> iterator = ((IEnumerable<int>)b).GetEnumerator();
+            Assert.AreEqual(true, iterator.MoveNext());
+            Assert.AreEqual(4, iterator.Current);
+            Assert.AreEqual(true, iterator.MoveNext());
+            Assert.AreEqual(5, iterator.Current);
+            Assert.AreEqual(false, iterator.MoveNext());
+
+        }
+
+        [TestMethod]
+        public void SsiYanKaiTest()
+        {
+            Console.WriteLine("testing SsiYanKaiTest");
+            EwahCompressedBitArray a = EwahCompressedBitArray.BitmapOf(39935, 39936, 39937, 39938, 39939, 39940, 39941, 39942, 39943, 39944, 39945, 39946, 39947, 39948, 39949, 39950, 39951, 39952, 39953, 39954, 39955, 39956, 39957, 39958, 39959, 39960, 39961, 39962, 39963, 39964, 39965, 39966, 39967, 39968, 39969, 39970, 39971, 39972, 39973, 39974, 39975, 39976, 39977, 39978, 39979, 39980, 39981, 39982, 39983, 39984, 39985, 39986, 39987, 39988, 39989, 39990, 39991, 39992, 39993, 39994, 39995, 39996, 39997, 39998, 39999, 40000, 40001, 40002, 40003, 40004, 40005, 40006, 40007, 40008, 40009, 40010, 40011, 40012, 40013, 40014, 40015, 40016, 40017, 40018, 40019, 40020, 40021, 40022, 40023, 40024, 40025, 40026, 40027, 40028, 40029, 40030, 40031, 40032, 40033, 40034, 40035, 40036, 40037, 40038, 40039, 40040, 40041, 40042, 40043, 40044, 40045, 40046, 40047, 40048, 40049, 40050, 40051, 40052, 40053, 40054, 40055, 40056, 40057, 40058, 40059, 40060, 40061, 40062, 40063, 40064, 40065, 40066, 40067, 40068, 40069, 40070, 40071, 40072, 40073, 40074, 40075, 40076, 40077, 40078, 40079, 40080, 40081, 40082, 40083, 40084, 40085, 40086, 40087, 40088, 40089, 40090, 40091, 40092, 40093, 40094, 40095, 40096, 40097, 40098, 40099, 40100);
+            EwahCompressedBitArray b = EwahCompressedBitArray.BitmapOf(39935, 39936, 39937, 39938, 39939, 39940, 39941, 39942, 39943, 39944, 39945, 39946, 39947, 39948, 39949, 39950, 39951, 39952, 39953, 39954, 39955, 39956, 39957, 39958, 39959, 39960, 39961, 39962, 39963, 39964, 39965, 39966, 39967, 39968, 39969, 39970, 39971, 39972, 39973, 39974, 39975, 39976, 39977, 39978, 39979, 39980, 39981, 39982, 39983, 39984, 39985, 39986, 39987, 39988, 39989, 39990, 39991, 39992, 39993, 39994, 39995, 39996, 39997, 39998, 39999, 270000);
+            HashSet<int> aPositions = new HashSet<int>(a.GetPositions());
+            ulong intersection = 0;
+            EwahCompressedBitArray inter = new EwahCompressedBitArray();
+            HashSet<int> bPositions = new HashSet<int>(b.GetPositions());
+            foreach (int integer in bPositions)
+            {
+                if (aPositions.Contains(integer))
+                {
+                    inter.Set(integer);
+                    ++intersection;
+                }
+            }
+            EwahCompressedBitArray and2 = a.And(b);
+            List<int> l1 = inter.GetPositions();
+            List<int> l2 = and2.GetPositions();
+            var ok = true;
+            if (l1.Count != l2.Count)
+            {
+                Console.WriteLine("cardinality differs = " + l1.Count + " " + l2.Count);
+                ok = false;
+            }
+            for (int k = 0; k < l1.Count; ++k)
+            {
+                if (l1[k] != l2[k])
+                {
+                    Console.WriteLine("differ at " + k + " = " + l1[k] + " " + l2[k]);
+                    ok = false;
+                }
+
+            }
+            Assert.IsTrue(ok);
+            Assert.AreEqual(true, and2.Equals(inter));
+            Assert.AreEqual(inter.GetHashCode(), and2.GetHashCode());
+            Assert.AreEqual(intersection, and2.GetCardinality());
+        }
+
+        [TestMethod]
+        public void TestCloneEwahCompressedBitArray()
+        {
+            Console.WriteLine("testing EWAH clone");
+            EwahCompressedBitArray a = new EwahCompressedBitArray();
+            a.Set(410018);
+            a.Set(410019);
+            a.Set(410020);
+            a.Set(410021);
+            a.Set(410022);
+            a.Set(410023);
+
+            EwahCompressedBitArray b = (EwahCompressedBitArray)a.Clone();
+
+            a.SetSizeInBits(487123, false);
+            b.SetSizeInBits(487123, false);
+
+            Assert.AreEqual(a, b);
+        }
+
+        [TestMethod]
         public void TestSetGet()
         {
             Console.WriteLine("testing EWAH Set/get");
             var ewcb = new EwahCompressedBitArray();
-            int[] val = {5, 4400, 44600, 55400, 1000000};
+            int[] val = { 5, 4400, 44600, 55400, 1000000 };
             for (int k = 0; k < val.Length; ++k)
             {
                 ewcb.Set(val[k]);
@@ -997,23 +1026,23 @@ namespace Ewah
             Console.WriteLine("testing EWAH Set/get:ok");
         }
 
-  /**
-   * Created: 2/4/11 6:03 PM By: Arnon Moscona.
-   */
+        /**
+         * Created: 2/4/11 6:03 PM By: Arnon Moscona.
+         */
 
-  /**
-   * Test with parameters.
-   *
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-
-        [Test]
+        /**
+         * Test with parameters.
+         *
+         * @throws IOException Signals that an I/O exception has occurred.
+         */
+        [TestMethod]
         public void TestWithParameters()
         {
             Console
                 .WriteLine("These tests can run for several minutes. Please be patient.");
             for (int k = 2; k < 1 << 24; k *= 8)
                 ShouldSetBits(k);
+
             Console.WriteLine("64");
 
             PolizziTest(64);
@@ -1023,16 +1052,17 @@ namespace Ewah
             Console.WriteLine("Your code is probably ok.");
         }
 
-        [Test]
+        [TestMethod]
         public void VanSchaikTest()
         {
             Console.WriteLine("testing vanSchaikTest (this takes some time)");
             const int totalNumBits = 32768;
             const double odds = 0.9;
             var rand = new Random(323232323);
+
             for (int t = 0; t < 100; t++)
             {
-                int numBitsSet = 0;
+                ulong numBitsSet = 0;
                 var cBitMap = new EwahCompressedBitArray();
                 for (int i = 0; i < totalNumBits; i++)
                 {
@@ -1043,7 +1073,7 @@ namespace Ewah
                     }
                 }
                 Assert.AreEqual(cBitMap.GetCardinality(), numBitsSet);
-            }         
+            }
             Console.WriteLine("testing vanSchaikTest:ok");
         }
     }
