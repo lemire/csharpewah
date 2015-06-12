@@ -1,3 +1,6 @@
+0.2.6 (June 12th 2015)
+  Fixed Tests that would not run, standardized C# formatting.
+
 0.2.5 (May 21st 2013)
   Fixed bug with addStreamOfNegatedDirtyWords (Vicent Marti)
 
