@@ -6,10 +6,10 @@ using System.Text;
 
 namespace Ewah
 {
-/*
- * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
- * Licensed under APL 2.0.
- */
+    /*
+     * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
+     * Licensed under APL 2.0.
+     */
 
 
     /// <summary>
@@ -74,7 +74,7 @@ namespace Ewah
         #endregion
 
         #region Fields
-        
+
         /// <summary>
         /// current (last) running length word
         /// </summary>
@@ -118,7 +118,8 @@ namespace Ewah
         /// <param name="input"></param>
         /// <param name="context"></param>
         private EwahCompressedBitArray(SerializationInfo input, StreamingContext context)
-            : this(input.GetInt32("sb"), input.GetInt32("aw"), (long[])input.GetValue("bu", typeof(long[])), input.GetInt32("rp"))  { }
+            : this(input.GetInt32("sb"), input.GetInt32("aw"), (long[])input.GetValue("bu", typeof(long[])), input.GetInt32("rp"))
+        { }
 
         /// <summary>
         /// Special constructor used by serialization infrastructure
@@ -127,7 +128,8 @@ namespace Ewah
         /// <param name="actualSizeInWords">The actual size in words.</param>
         /// <param name="buffer">The buffer.</param>
         /// <param name="runningLengthWordPosition">The running length word position.</param>
-        internal EwahCompressedBitArray(int sizeInBits, int actualSizeInWords, long[] buffer, int runningLengthWordPosition) {
+        internal EwahCompressedBitArray(int sizeInBits, int actualSizeInWords, long[] buffer, int runningLengthWordPosition)
+        {
             this.SizeInBits = sizeInBits;
             this._ActualSizeInWords = actualSizeInWords;
             this._Buffer = buffer;
@@ -143,7 +145,7 @@ namespace Ewah
         /// compressed bitmap. Initially, the SizeInBits is zero. It is extended
         /// automatically when you set bits to true.
         /// </summary>
-        public int SizeInBits { get;  set; }
+        public int SizeInBits { get; set; }
 
         /// <summary>
         /// Report the *compressed* size of the bitmap (equivalent to memory usage,
@@ -151,7 +153,7 @@ namespace Ewah
         /// </summary>
         public int SizeInBytes
         {
-            get { return _ActualSizeInWords*8; }
+            get { return _ActualSizeInWords * 8; }
         }
 
         #endregion
@@ -184,23 +186,26 @@ namespace Ewah
             long karprabin = 0;
             const int B = 31;
             EwahEnumerator i = this.GetEwahEnumerator();
-            while( i.HasNext() ) {
-              i.Next();
-              if (i._Rlw.RunningBit == true) {
-                 karprabin += B * karprabin
-                            + (i._Rlw.RunningLength & ((1L << 32) - 1));
-                 karprabin += B * karprabin + (long)(((ulong)i._Rlw.RunningLength) >> 32);
-              }
-              int dw = i.DirtyWords;
-              long numLiteralWords = i._Rlw.NumberOfLiteralWords;
-              long buf;
-              for (int k = 0; k <  numLiteralWords; ++k){
-                 buf = this._Buffer[dw + k];
-                 karprabin += B * karprabin + (buf & ((1L << 32) - 1));
-                 karprabin += B * karprabin + (long)(((ulong)buf) >> 32);
-              }
+            while (i.HasNext())
+            {
+                i.Next();
+                if (i._Rlw.RunningBit == true)
+                {
+                    karprabin += B * karprabin
+                               + (i._Rlw.RunningLength & ((1L << 32) - 1));
+                    karprabin += B * karprabin + (long)(((ulong)i._Rlw.RunningLength) >> 32);
+                }
+                int dw = i.DirtyWords;
+                long numLiteralWords = i._Rlw.NumberOfLiteralWords;
+                long buf;
+                for (int k = 0; k < numLiteralWords; ++k)
+                {
+                    buf = this._Buffer[dw + k];
+                    karprabin += B * karprabin + (buf & ((1L << 32) - 1));
+                    karprabin += B * karprabin + (long)(((ulong)buf) >> 32);
+                }
             }
-            return (int) karprabin;
+            return (int)karprabin;
         }
 
         /// <summary>
@@ -210,20 +215,21 @@ namespace Ewah
         public override string ToString()
         {
             var ans = new StringBuilder("{");
-            
-            
-		    IEnumerator<int> it = ((IEnumerable<int>)this).GetEnumerator();
-		    
-		    if(it.MoveNext()) 
-		     while(true) {
-		    	ans.Append(it.Current);
-		    	var b = it.MoveNext();
-		    	if(b) 
-		    	  ans.Append(",");
-		    	else
-		    	  break;
-		     }
-		    ans.Append("}");
+
+
+            IEnumerator<int> it = ((IEnumerable<int>)this).GetEnumerator();
+
+            if (it.MoveNext())
+                while (true)
+                {
+                    ans.Append(it.Current);
+                    var b = it.MoveNext();
+                    if (b)
+                        ans.Append(",");
+                    else
+                        break;
+                }
+            ans.Append("}");
             return ans.ToString();
         }
 
@@ -289,7 +295,7 @@ namespace Ewah
                                         : RunningLengthWord.LargestRunningLengthCount
                                           - runlen;
                 _Rlw.RunningLength = runlen + whatwecanadd;
-                SizeInBits += (int) whatwecanadd*WordInBits;
+                SizeInBits += (int)whatwecanadd * WordInBits;
                 if (number - whatwecanadd > 0)
                 {
                     wordsadded += AddStreamOfEmptyWords(v, number - whatwecanadd);
@@ -305,7 +311,7 @@ namespace Ewah
                                         : RunningLengthWord.LargestRunningLengthCount;
                 _Rlw.RunningBit = v;
                 _Rlw.RunningLength = whatwecanadd;
-                SizeInBits += (int) whatwecanadd*WordInBits;
+                SizeInBits += (int)whatwecanadd * WordInBits;
                 if (number - whatwecanadd > 0)
                 {
                     wordsadded += AddStreamOfEmptyWords(v, number - whatwecanadd);
@@ -615,17 +621,15 @@ namespace Ewah
         /// <returns>the number of bits set to true</returns>
         public ulong GetCardinality()
         {
-
             ulong counter = 0;
             var i = new EwahEnumerator(_Buffer, _ActualSizeInWords);
             while (i.HasNext())
             {
-
                 RunningLengthWord localrlw = i.Next();
 
                 if (localrlw.RunningBit)
                 {
-                    counter += (ulong)( WordInBits* localrlw.RunningLength ) ;
+                    counter += (ulong)(WordInBits * localrlw.RunningLength);
                 }
                 for (int j = 0; j < localrlw.NumberOfLiteralWords; ++j)
                 {
@@ -663,8 +667,9 @@ namespace Ewah
                 }
                 else
                 {
-                    pos += WordInBits*(int) localrlw.RunningLength;
+                    pos += WordInBits * (int)localrlw.RunningLength;
                 }
+
                 for (int j = 0; j < localrlw.NumberOfLiteralWords; ++j)
                 {
                     long data = i.Buffer[i.DirtyWords + j];
@@ -723,8 +728,8 @@ namespace Ewah
                     predatorrl = predator.RunningLength;
                     long preyrl = prey.RunningLength;
                     tobediscarded = (predatorrl >= preyrl) ? preyrl : predatorrl;
-                    if(predator.RunningBit) return true;
-                    if(preyrl - tobediscarded > 0) return true;
+                    if (predator.RunningBit) return true;
+                    if (preyrl - tobediscarded > 0) return true;
                     predator.DiscardFirstWords(preyrl);
                     prey.RunningLength = 0;
                 }
@@ -747,30 +752,30 @@ namespace Ewah
                         tobediscarded = (predatorrl >= nbreDirtyPrey)
                                             ? nbreDirtyPrey
                                             : predatorrl;
-                        if(tobediscarded > 0) return true;
+                        if (tobediscarded > 0) return true;
                         predator.DiscardFirstWords(tobediscarded);
                         prey.DiscardFirstWords(tobediscarded);
                     }
                 }
                 // all that is left to do now is to AND the dirty words
                 nbreDirtyPrey = prey.NumberOfLiteralWords;
-                
+
                 if (nbreDirtyPrey > 0)
                 {
                     for (int k = 0; k < nbreDirtyPrey; ++k)
                     {
                         if (iIsPrey)
                         {
-                            if((i.Buffer[prey.DirtyWordOffset + i.DirtyWords + k]
-                                          & j.Buffer[predator.DirtyWordOffset + j.DirtyWords + k]) != 0 ) 
-                                          return true;
+                            if ((i.Buffer[prey.DirtyWordOffset + i.DirtyWords + k]
+                                          & j.Buffer[predator.DirtyWordOffset + j.DirtyWords + k]) != 0)
+                                return true;
                         }
                         else
                         {
-                            if((i.Buffer[predator.DirtyWordOffset + i.DirtyWords
+                            if ((i.Buffer[predator.DirtyWordOffset + i.DirtyWords
                                                    + k]
                                           & j.Buffer[prey.DirtyWordOffset + j.DirtyWords + k]) != 0)
-                                          return true;
+                                return true;
                         }
                     }
                     predator.DiscardFirstWords(nbreDirtyPrey);
@@ -825,25 +830,26 @@ namespace Ewah
                 if (!i.HasNext())
                 {
 
-          			int usedbitsinlast = SizeInBits % WordInBits;
-          		          			if (usedbitsinlast == 0)
-            			return;
+                    int usedbitsinlast = SizeInBits % WordInBits;
 
-    				if (rlw1.NumberOfLiteralWords == 0) 
-    				{
-    					if((rlw1.RunningLength>0) && (rlw1.RunningBit)) 
-    					{
-    						rlw1.RunningLength = rlw1.RunningLength-1;
-    						AddLiteralWord((long)((~0UL) >> (WordInBits - usedbitsinlast)));
-    					}
-    					return;
-    				}
-                    i.Buffer[i.DirtyWords + rlw1.NumberOfLiteralWords - 1] &= (long) ((~0UL) >>
+                    if (usedbitsinlast == 0)
+                        return;
+
+                    if (rlw1.NumberOfLiteralWords == 0)
+                    {
+                        if ((rlw1.RunningLength > 0) && (rlw1.RunningBit))
+                        {
+                            rlw1.RunningLength = rlw1.RunningLength - 1;
+                            AddLiteralWord((long)((~0UL) >> (WordInBits - usedbitsinlast)));
+                        }
+                        return;
+                    }
+                    i.Buffer[i.DirtyWords + rlw1.NumberOfLiteralWords - 1] &= (long)((~0UL) >>
                                                                                (WordInBits - usedbitsinlast));
-                                                                               
+
                     return;
                 }
-                
+
             }
         }
 
@@ -999,19 +1005,19 @@ namespace Ewah
                 return false;
             }
             // must I complete a word?
-            if ((SizeInBits%WordInBits) != 0)
+            if ((SizeInBits % WordInBits) != 0)
             {
-                int possiblesizeinbits = (SizeInBits/WordInBits)*WordInBits + WordInBits;
+                int possiblesizeinbits = (SizeInBits / WordInBits) * WordInBits + WordInBits;
                 if (possiblesizeinbits < i + 1)
                 {
                     SizeInBits = possiblesizeinbits;
                 }
             }
-            AddStreamOfEmptyWords(false, (i/WordInBits) - SizeInBits/WordInBits);
-            int bittoflip = i - (SizeInBits/WordInBits*WordInBits);
+            AddStreamOfEmptyWords(false, (i / WordInBits) - SizeInBits / WordInBits);
+            int bittoflip = i - (SizeInBits / WordInBits * WordInBits);
             // next, we set the bit
             if ((_Rlw.NumberOfLiteralWords == 0)
-                || ((SizeInBits - 1)/WordInBits < i/WordInBits))
+                || ((SizeInBits - 1) / WordInBits < i / WordInBits))
             {
                 long newdata = 1L << bittoflip;
                 AddLiteralWord(newdata);
@@ -1050,25 +1056,31 @@ namespace Ewah
             {
                 return false;
             }
-            if( defaultvalue == false ) {
+            if (defaultvalue == false)
+            {
 
-			    int currentLeftover = SizeInBits % WordInBits;
-			    int finalLeftover = size % WordInBits;
-			    AddStreamOfEmptyWords(false, (size / WordInBits) - SizeInBits
-			      / WordInBits + (finalLeftover != 0 ? 1 : 0)
-			      + (currentLeftover != 0 ? -1 : 0));
-      
-            } else {
-		      // next bit could be optimized
-		      while (((SizeInBits % WordInBits) != 0) && (SizeInBits < size)) {
-		        	Set(SizeInBits);
-		      }
-		      AddStreamOfEmptyWords(defaultvalue, (size / WordInBits)
-		        - SizeInBits / WordInBits);
-		      // next bit could be optimized
-		      while (SizeInBits < size) {
-		        	Set(SizeInBits);
-		      }
+                int currentLeftover = SizeInBits % WordInBits;
+                int finalLeftover = size % WordInBits;
+                AddStreamOfEmptyWords(false, (size / WordInBits) - SizeInBits
+                  / WordInBits + (finalLeftover != 0 ? 1 : 0)
+                  + (currentLeftover != 0 ? -1 : 0));
+            }
+            else
+            {
+                // next bit could be optimized
+                while (((SizeInBits % WordInBits) != 0) && (SizeInBits < size))
+                {
+                    Set(SizeInBits);
+                }
+
+                AddStreamOfEmptyWords(defaultvalue, (size / WordInBits)
+                  - SizeInBits / WordInBits);
+
+                // next bit could be optimized
+                while (SizeInBits < size)
+                {
+                    Set(SizeInBits);
+                }
             }
             SizeInBits = size;
             return true;
@@ -1118,9 +1130,9 @@ namespace Ewah
             }
             return ans;
         }
-          
 
-        
+
+
 
         /// <summary>
         /// Returns a new compressed bitmap containing the bitwise XOR values of the
@@ -1317,7 +1329,7 @@ namespace Ewah
                 PushBack(newdata);
                 return 2;
             }
-            _Rlw.NumberOfLiteralWords = (int) numbersofar + 1;
+            _Rlw.NumberOfLiteralWords = (int)numbersofar + 1;
             PushBack(newdata);
             return 1;
         }
@@ -1343,10 +1355,10 @@ namespace Ewah
                                     ? number
                                     : RunningLengthWord.LargestLiteralCount
                                       - numberOfLiteralWords;
-            _Rlw.NumberOfLiteralWords = (int) (numberOfLiteralWords + whatwecanadd);
+            _Rlw.NumberOfLiteralWords = (int)(numberOfLiteralWords + whatwecanadd);
             long leftovernumber = number - whatwecanadd;
-            PushBack(data, (int) start, (int) whatwecanadd);
-            SizeInBits += (int) whatwecanadd*WordInBits;
+            PushBack(data, (int)start, (int)whatwecanadd);
+            SizeInBits += (int)whatwecanadd * WordInBits;
             long wordsadded = whatwecanadd;
             if (leftovernumber > 0)
             {
@@ -1381,10 +1393,10 @@ namespace Ewah
                                     ? number
                                     : RunningLengthWord.LargestLiteralCount
                                       - numberOfLiteralWords;
-            _Rlw.NumberOfLiteralWords = (int) (numberOfLiteralWords + whatwecanadd);
+            _Rlw.NumberOfLiteralWords = (int)(numberOfLiteralWords + whatwecanadd);
             long leftovernumber = number - whatwecanadd;
-            NegativePushBack(data, (int) start, (int) whatwecanadd);
-            SizeInBits += (int) whatwecanadd*WordInBits;
+            NegativePushBack(data, (int)start, (int)whatwecanadd);
+            SizeInBits += (int)whatwecanadd * WordInBits;
             long wordsadded = whatwecanadd;
             if (leftovernumber > 0)
             {
@@ -1420,7 +1432,7 @@ namespace Ewah
         {
             while (_ActualSizeInWords + number >= _Buffer.Length)
             {
-                Array.Resize(ref _Buffer, _Buffer.Length*2);
+                Array.Resize(ref _Buffer, _Buffer.Length * 2);
                 _Rlw.ArrayOfWords = _Buffer;
             }
             for (int k = 0; k < number; ++k)
@@ -1438,7 +1450,7 @@ namespace Ewah
         {
             if (_ActualSizeInWords == _Buffer.Length)
             {
-                Array.Resize(ref _Buffer, _Buffer.Length*2);
+                Array.Resize(ref _Buffer, _Buffer.Length * 2);
                 _Rlw.ArrayOfWords = _Buffer;
             }
             _Buffer[_ActualSizeInWords++] = data;
@@ -1454,7 +1466,7 @@ namespace Ewah
         {
             while (_ActualSizeInWords + number >= _Buffer.Length)
             {
-                Array.Resize(ref _Buffer, _Buffer.Length*2);
+                Array.Resize(ref _Buffer, _Buffer.Length * 2);
                 _Rlw.ArrayOfWords = _Buffer;
             }
             Array.Copy(data, start, _Buffer, _ActualSizeInWords, number);
@@ -1484,8 +1496,8 @@ namespace Ewah
         public object Clone()
         {
             var clone = new EwahCompressedBitArray();
-            clone._Buffer = (long[]) _Buffer.Clone();
-            clone._Rlw =  new RunningLengthWord(clone._Buffer,_Rlw.Position);
+            clone._Buffer = (long[])_Buffer.Clone();
+            clone._Rlw = new RunningLengthWord(clone._Buffer, _Rlw.Position);
             clone._ActualSizeInWords = _ActualSizeInWords;
             clone.SizeInBits = SizeInBits;
             return clone;
@@ -1520,20 +1532,21 @@ namespace Ewah
             this.Shrink();
             info.AddValue("sb", SizeInBits);
             info.AddValue("aw", _ActualSizeInWords);
-            info.AddValue("bu", _Buffer, typeof (long[]));
+            info.AddValue("bu", _Buffer, typeof(long[]));
             info.AddValue("rp", _Rlw.Position);
         }
 
         #endregion
 
         #region Class Methods
-        
-		public static EwahCompressedBitArray BitmapOf(params int[] setbits) {
-    		EwahCompressedBitArray a = new EwahCompressedBitArray();
-    		foreach (int k in setbits)
-      			a.Set(k);
-    		return a;
-  		}
+
+        public static EwahCompressedBitArray BitmapOf(params int[] setbits)
+        {
+            EwahCompressedBitArray a = new EwahCompressedBitArray();
+            foreach (int k in setbits)
+                a.Set(k);
+            return a;
+        }
         /// <summary>
         /// For internal use.
         /// </summary>
@@ -1545,7 +1558,7 @@ namespace Ewah
                                       EwahCompressedBitArray container)
         {
             BufferedRunningLengthWord runningLengthWord = initialWord;
-            for (;;)
+            for (; ;)
             {
                 long runningLength = runningLengthWord.RunningLength;
                 container.AddStreamOfEmptyWords(runningLengthWord.RunningBit,
@@ -1561,23 +1574,23 @@ namespace Ewah
                 runningLengthWord = new BufferedRunningLengthWord(enumerator.Next());
             }
         }
-        
+
         /// <summary>
         /// Counts the number of set (1) bits.
         /// </summary>
         /// <param name="v">the value to be processed</param>        
         public static UInt64 bitCount(UInt64 v)
-        { 
-			const UInt64 MaskMult = 0x0101010101010101;
-			const UInt64 mask1h = (~0UL) / 3 << 1;
-			const UInt64 mask2l = (~0UL) / 5;
-			const UInt64 mask4l = (~0UL) / 17;
-			v -= (mask1h & v) >> 1;
-			v = (v & mask2l) + ((v >> 2) & mask2l);
-			v += v >> 4;
-			v &= mask4l;
-			return (v * MaskMult) >> 56;
-		}
+        {
+            const UInt64 MaskMult = 0x0101010101010101;
+            const UInt64 mask1h = (~0UL) / 3 << 1;
+            const UInt64 mask2l = (~0UL) / 5;
+            const UInt64 mask4l = (~0UL) / 17;
+            v -= (mask1h & v) >> 1;
+            v = (v & mask2l) + ((v >> 2) & mask2l);
+            v += v >> 4;
+            v &= mask4l;
+            return (v * MaskMult) >> 56;
+        }
 
         /// <summary>
         /// For internal use.
@@ -1590,7 +1603,7 @@ namespace Ewah
                                              EwahCompressedBitArray container)
         {
             BufferedRunningLengthWord runningLengthWord = initialWord;
-            for (;;)
+            for (; ;)
             {
                 long runningLength = runningLengthWord.RunningLength;
                 container.AddStreamOfEmptyWords(false,
@@ -1650,7 +1663,7 @@ namespace Ewah
                 ++_LocalBufferSize;
                 while (_LocalBufferSize > _LocalBuffer.Length)
                 {
-                    Array.Resize(ref _LocalBuffer, _LocalBuffer.Length*2);
+                    Array.Resize(ref _LocalBuffer, _LocalBuffer.Length * 2);
                 }
                 _LocalBuffer[_LocalBufferSize - 1] = val;
             }
@@ -1684,7 +1697,7 @@ namespace Ewah
                 }
                 else
                 {
-                    _Pos += (int) (_WordInBits*_LocalRlw.RunningLength);
+                    _Pos += (int)(_WordInBits * _LocalRlw.RunningLength);
                 }
                 for (int j = 0; j < _LocalRlw.NumberOfLiteralWords; ++j)
                 {

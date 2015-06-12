@@ -1,25 +1,22 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Ewah
 {
-	
-/*
- * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
- * Licensed under APL 2.0.
- */
-    [TestFixture]
+    /*
+     * Copyright 2012, Kemal Erdogan, Daniel Lemire and Ciaran Jessup
+     * Licensed under APL 2.0.
+     */
+    [TestClass]
     public class EWAHCompressedBitArraySerializerTest
     {
 
         /// <summary>
         /// Tests the custom serialization strategy.
         /// </summary>
-        [Test]
+        [TestMethod]
         public void TestCustomSerializationStrategy() {
             Console.WriteLine("testing Custom serialization strategy");
 
@@ -56,7 +53,7 @@ namespace Ewah
             }
 
             // Assert that the new form is more compact than the original form.
-            Assert.Less(newFormDeserialized.Length, originalDeserialized.Length);
+            Assert.IsTrue(newFormDeserialized.Length < originalDeserialized.Length);
 
             // Compare the 'normal' de-serialized + re-serialized form, against the original.
             Assert.AreEqual(bmp, originalReserialized);
