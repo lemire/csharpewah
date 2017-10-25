@@ -539,7 +539,7 @@ namespace Ewah
             bitmap.Set(int.MaxValue);
 
             //Assert.AreEqual(true, false);
-            Console.WriteLine("Total Items %d\n", bitmap.GetCardinality());
+            Console.WriteLine("Total Items {0:d}\n", bitmap.GetCardinality());
             Assert.AreEqual(bitmap.GetCardinality(), 1UL);
             Console.WriteLine("testing EWAH GetCardinality:ok");
         }
