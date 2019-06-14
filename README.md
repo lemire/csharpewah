@@ -1,5 +1,7 @@
 CSharpEWAH
 ==
+[![Build Status](https://travis-ci.org/lemire/csharpewah.svg?branch=master)](https://travis-ci.org/lemire/csharpewah)
+
 
 (c) Kemal Erdogan, Daniel Lemire, Ciaran Jessup, Michael Rice, Matt Warren
 This code is licensed under the Apache
