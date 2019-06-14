@@ -120,20 +120,14 @@ Unit testing
 
 
 You can build CSharpEWAH using the open source
-Mono toolchain using the xbuild command.
-Just type xbuild in the main directory. This
-should build a C# executable file that you
-will then find in a newly created bin
-directory.
-
-$ xbuild
-
-
+Mono toolchain using the msbuild command.
 Then you can run the executable using
 the mono command:
-
+```
+$ nuget restore EWAH.sln
+$ msbuild
 $ mono ./EWAH.RunTests/bin/Debug/EWAH.RunTests.exe
-
+```
 
 This will run unit tests.
 
