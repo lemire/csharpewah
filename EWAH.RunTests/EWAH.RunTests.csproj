@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{34766D05-85E8-44A7-A0CD-8AA9391AA302}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EWAH.RunTests</RootNamespace>
     <AssemblyName>EWAH.RunTests</AssemblyName>
