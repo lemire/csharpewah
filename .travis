@@ -1,0 +1,7 @@
+language: csharp
+solution: EWAH.sln
+install:
+  - nuget restore EWAH.sln
+script:
+  - msbuild /p:Configuration=Release EWAH.sln
+  - mono ./EWAH.RunTests/bin/Debug/EWAH.RunTests.exe
