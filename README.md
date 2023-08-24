@@ -1,6 +1,5 @@
 CSharpEWAH
 ==
-[![Build Status](https://travis-ci.org/lemire/csharpewah.svg?branch=master)](https://travis-ci.org/lemire/csharpewah)
 
 
 This is a compressed variant of
